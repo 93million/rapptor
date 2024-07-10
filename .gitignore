@@ -1,0 +1,15 @@
+.DS_Store
+/.env
+/accounts
+/apps
+/appstore
+/appstorerepo
+/auth-lib
+/base
+/bin/generate-dev-certs/ca
+/certcache
+/control-panel
+/dev/docker/config.json
+/dev/ssh
+/dev/ssl
+/var

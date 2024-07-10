@@ -1,0 +1,78 @@
+#! /usr/bin/env bash
+
+set -e
+
+SCRIPT_DIR=$(dirname "$0")
+E_MISSING_ARGS=1
+
+exit_with_usage_msg()
+{
+  echo $1
+  echo "$(basename $0) [-b git-branch] -c certbot-email -d <domain> -h <ssh-host> -n <instance-name> -p <account-password> [-P <ssh-pass>] -s <service-name> -u <account-user> -U <ssh-user>"
+  exit $2
+}
+
+checkrequirements()
+{
+  if [ -z "$ACCOUNT_NAME" ]; then
+    exit_with_usage_msg "Account name is missing" $E_MISSING_ARGS
+  fi
+  if [ -z "$ACCOUNT_PASS" ]; then
+    exit_with_usage_msg "Account password is missing" $E_MISSING_ARGS
+  fi
+  if [ -z "$CERTCACHE_CERTBOT_EMAIL" ]; then
+    exit_with_usage_msg "Certbot email is missing" $E_MISSING_ARGS
+  fi
+  if [ -z "$DOMAINS" ]; then
+    exit_with_usage_msg "Domains are missing" $E_MISSING_ARGS
+  fi
+  if [ -z "$NAME" ]; then
+    exit_with_usage_msg "Name is missing" $E_MISSING_ARGS
+  fi
+  if [ -z "$HOST" ]; then
+    exit_with_usage_msg "Host is missing" $E_MISSING_ARGS
+  fi
+}
+
+parse_args()
+{
+  local OPTIND OPTARG flag
+  while getopts "b:c:d:h:n:p:P:s:u:U:" flag; do
+    case "$flag" in
+      b) GIT_BRANCH=$OPTARG;;
+      c) CERTCACHE_CERTBOT_EMAIL=$OPTARG;;
+      d) DOMAINS=$OPTARG;;
+      h) HOST=$OPTARG;;
+      n) NAME=$OPTARG;;
+      p) ACCOUNT_PASS=$OPTARG;;
+      P) SSH_PASS=$OPTARG;;
+      s) SERVICE_NAME=$OPTARG;;
+      u) ACCOUNT_NAME=$OPTARG;;
+      U) SSH_USER=${OPTARG};;
+    esac
+  done
+
+  if [ -z "SSH_USER" ]; then
+    SSH_USER=root
+  fi
+}
+
+
+main()
+{
+  parse_args "$@"
+  checkrequirements
+  cat "$SCRIPT_DIR/install-local" | \
+    ssh \
+      "$SSH_USER@$HOST" \
+      /usr/bin/env sh /dev/stdin \
+      -b "$GIT_BRANCH" \
+      -c "$CERTCACHE_CERTBOT_EMAIL" \
+      -d "$DOMAINS" \
+      -n "$NAME" \
+      -p "$ACCOUNT_PASS" \
+      -s "$SERVICE_NAME" \
+      -u "$ACCOUNT_NAME"
+}
+
+main "$@"

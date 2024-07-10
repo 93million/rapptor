@@ -1,0 +1,109 @@
+networks:
+  default:
+    name: punk
+
+volumes:
+  punk-data:
+    name: punk-data
+
+services:
+  http-proxy:
+    container_name: plexmissionhttpproxy
+    image: gitlab.93m.org:5050/93m/punk/service/http-proxy:0.1
+    restart: always
+    volumes:
+      - ./certcache/certs/:/etc/certcache/:ro
+    ports:
+      - 80:80
+      - 443:443
+    labels:
+      com.93million.containerType: system
+  # plexmissioncontrolpanelapp:
+  #   container_name: plexmissioncontrolpanelapp
+  #   image: gitlab.93m.org:5050/93m/punk/app/control-panel:0.1-dev
+  #   restart: always
+  #   volumes:
+  #     - ./certcache/certs:/etc/certcache:ro
+  #   extra_hosts:
+  #     - controlpanelservice.punk.loc:host-gateway
+  #   labels:
+  #     com.93million.containerType: system
+  #   command: ['npm', 'run', 'preview', '--', '--host', '0.0.0.0', '--port', '5173']
+  # plexmissioncontrolpanelservice:
+  #   container_name: plexmissioncontrolpanelservice
+  #   image: gitlab.93m.org:5050/93m/punk/service/control-panel:0.1-dev
+  #   restart: always
+  #   environment:
+  #     PUNK_APP_STORE_REPO: 'https://gitlab.93m.org/93m/punk/app-store/app.93million.appstore.git'
+  #     PUNK_DOCKER_CONFIG_PATH: '/app/docker/config.json'
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./:/app/system:rw
+  #     - ./.env:/app/.env:rw
+  #     - ./accounts:/app/accounts:rw
+  #     - ./apps:/app/apps:rw
+  #     - ./appstore:/app/appstore:rw
+  #     - ./base:/base:rw
+  #     - ./docker/config.json:/app/docker/config.json:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock:rw
+  #     - punk-data:/files:rw
+  #   labels:
+  #     com.93million.containerType: system
+  plexmissioncontrolpanel:
+    container_name: service.93million.rapptor
+    image: gitlab.93m.org:5050/93m/punk/app/control-panel:latest
+    restart: always
+    environment:
+      NODE_ENV: production
+      PUNK_APP_STORE_REPO: 'https://gitlab.93m.org/93m/punk/app-store/app.93million.appstore.git'
+      PUNK_DOCKER_CONFIG_PATH: '/app/docker/config.json'
+    # env_file:
+    #   - .env
+    ports:
+      - 80:80
+      - 443:443
+      - 9229:9229
+      - 9231:9231
+      - 4000:4000
+      - 4002:4002
+    volumes:
+      - ./:/app/system:rw
+      - ./.env:/app/.env:rw
+      - ./apps:/app/apps:rw
+      - ./appstore:/app/appstore:rw
+      - ./appstorerepo:/appstorerepo:ro
+      - ./base:/app/base:rw
+      - ./accounts:/app/accounts:rw
+      - ./certcache/certs:/etc/certcache:ro
+      - ./docker/config.json:/app/docker/config.json:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - punk-data:/files:rw
+    extra_hosts:
+      - controlpanelservice.punk.loc:host-gateway
+      - controlpanelservice-static.punk.loc:host-gateway
+    labels:
+      com.93million.containerType: system
+  certcache:
+    container_name: certcache
+    image: ghcr.io/93million/certcache:0.6.0
+    restart: always
+    volumes:
+      - ./certcache/catkeys/:/certcache/catkeys/:rw
+      - ./certcache/certs/:/certcache/certs/:rw
+    environment:
+      CERTCACHE_TEST_CERT: '1'
+    env_file:
+      - .env
+    ports:
+      - '53:53/udp'
+      - '53:53/tcp'
+    labels:
+      com.93million.containerType: system
+  docker-container:
+    image: docker:26.1.0-dind-alpine3.19
+    container_name: dockerrun
+    restart: 'no'
+    labels:
+      com.93million.containerType: system
+    command: ['true']

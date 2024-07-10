@@ -1,0 +1,221 @@
+#! /usr/bin/env sh
+
+set -e
+
+DEPLOY_PASSWORD=""
+DEPLOY_USER="customer"
+APP_REPO="gitlab.93m.org/93m/punk/system/deploy.git"
+DOCKER_REGISTRY="gitlab.93m.org:5050"
+
+E_MISSING_ARGS=1
+E_REQUIRES_ROOT=2
+INSTALL_DIR="/var/docker/punk"
+ACCOUNTS_DIR="$INSTALL_DIR/accounts"
+COMPOSE_FILE="$INSTALL_DIR/docker-compose.yml"
+
+
+check_requirements()
+{
+  if [ $( id -u ) -ne 0 ]; then
+    exit_with_usage_msg "Script must be run as root" $E_REQUIRES_ROOT
+  fi
+
+  if [ -z "$DOMAINS" ]; then
+    exit_with_usage_msg "Domains are missing" $E_MISSING_ARGS
+  fi
+
+  if [ -z "$CERTCACHE_CERTBOT_EMAIL" ]; then
+    exit_with_usage_msg "Certbot email is missing" $E_MISSING_ARGS
+  fi
+
+
+  if [ -z "$INITIAL_USERNAME" ]; then
+    exit_with_usage_msg "Username is missing" $E_MISSING_ARGS
+  fi
+
+  if [ -z "$INITIAL_USERPASS" ]; then
+    exit_with_usage_msg "Password is missing" $E_MISSING_ARGS
+  fi
+}
+
+configure_user_data()
+{
+  echo -n "Configuring user data... "
+  if user_exists "$INITIAL_USERNAME"; then
+    docker compose run \
+      --rm \
+      plexmissioncontrolpanelservice \
+      npm run cli -- \
+      updateuser \
+      --admin \
+      -p "$INITIAL_USERPASS" \
+      "$INITIAL_USERNAME" \
+      > /dev/null \
+      2> /dev/null
+  else
+    docker compose run \
+      --rm \
+      plexmissioncontrolpanelservice \
+      npm run cli -- \
+      createuser \
+      --admin \
+      -p \
+      "$INITIAL_USERPASS" \
+      "$INITIAL_USERNAME" \
+      > /dev/null \
+      2> /dev/null
+  fi
+  echo "Done"
+}
+
+create_instance_data()
+{
+  docker compose run \
+    --rm \
+    plexmissioncontrolpanelservice \
+    npm run cli -- \
+    setinfo \
+    -c "$CERTCACHE_CERTBOT_EMAIL" \
+    -n "$NAME" \
+    -s "$SERVICE_NAME" \
+    -u "$DOMAINS"
+}
+
+exit_with_usage_msg()
+{
+  echo $1
+  echo "$(basename $0) [-b git-branch] [-u <ssh-user> default=root] -c certbot_email -d <domain> -h <ssh-host>"
+  exit $2
+}
+
+install_app()
+{
+  REPO_URI="https://$DEPLOY_USER:$DEPLOY_PASSWORD@$APP_REPO"
+  if [ ! -d "$INSTALL_DIR" ]; then
+    mkdir -p "$INSTALL_DIR"
+    git clone "$REPO_URI" "$INSTALL_DIR"
+  fi
+  cd "$INSTALL_DIR"
+  git remote set-url origin "$REPO_URI"
+  git fetch
+
+  if [ -z "$GIT_BRANCH" ]; then
+    GIT_BRANCH="master"
+  fi
+
+  git checkout "$GIT_BRANCH"
+  git reset --hard origin/$GIT_BRANCH
+
+  docker compose -f "$COMPOSE_FILE" pull > /dev/null
+}
+
+install_docker()
+{
+  if ! command -v docker > /dev/null; then
+    # source: https://docs.docker.com/engine/install/debian/
+    apt-get install -y ca-certificates curl
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+    chmod a+r /etc/apt/keyrings/docker.asc
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+      tee /etc/apt/sources.list.d/docker.list > /dev/null
+    apt-get update
+    apt-get install \
+      -y \
+      docker-ce \
+      docker-ce-cli \
+      containerd.io \
+      docker-buildx-plugin \
+      docker-compose-plugin
+  fi
+}
+
+install_apps() {
+  docker compose run \
+    --rm \
+    plexmissioncontrolpanelservice \
+    npm run cli -- \
+    install \
+    app.93million.plex
+  docker compose run \
+    --rm \
+    plexmissioncontrolpanelservice \
+    npm run cli -- \
+    install \
+    app.93million.transmission
+  docker compose run \
+    --rm \
+    plexmissioncontrolpanelservice \
+    npm run cli -- \
+    install \
+    app.93million.wg-easy
+}
+
+install_git()
+{
+  if ! command -v git > /dev/null; then
+    apt-get install -y git
+  fi
+}
+
+parse_args()
+{
+  local OPTIND OPTARG flag
+  while getopts "b:c:d:h:n:p:s:u:" flag; do
+    case "$flag" in
+      b) GIT_BRANCH=$OPTARG;;
+      c) CERTCACHE_CERTBOT_EMAIL=$OPTARG;;
+      d) DOMAINS=$OPTARG;;
+      n) NAME=$OPTARG;;
+      p) INITIAL_USERPASS=$OPTARG;;
+      s) SERVICE_NAME=$OPTARG;;
+      u) INITIAL_USERNAME=$OPTARG;;
+    esac
+  done
+}
+
+pull_docker_images()
+{
+  echo -n "Pulling docker images... "
+  docker login -u "$DEPLOY_USER" -p "$DEPLOY_PASSWORD" "$DOCKER_REGISTRY" \
+    > /dev/null \
+    2> /dev/null
+  docker compose -f "$COMPOSE_FILE" pull \
+    > /dev/null \
+    2> /dev/null
+  echo "Done"
+}
+
+restart_app()
+{
+  echo -n "Restarting app... "
+  docker compose -f "$COMPOSE_FILE" down > /dev/null 2> /dev/null
+  docker compose -f "$COMPOSE_FILE" up -d  > /dev/null 2> /dev/null
+  echo "Done"
+}
+
+user_exists()
+{
+  USERNAME="$1"
+  [ -d "$ACCOUNTS_DIR/$USERNAME" ]
+}
+
+main()
+{
+  parse_args "$@"
+  check_requirements
+  apt-get update
+  install_docker
+  install_git
+  install_app
+  touch "$INSTALL_DIR/.env"
+  pull_docker_images
+  configure_user_data
+  create_instance_data
+  install_apps
+  restart_app
+}
+
+main "$@"

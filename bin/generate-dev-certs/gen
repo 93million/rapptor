@@ -1,0 +1,39 @@
+#! /usr/bin/env bash
+
+set -e
+
+SCRIPT=$(realpath "$0")
+SCRIPT_DIR=$(dirname "$SCRIPT")
+echo "SCRIPT_DIR: $SCRIPT_DIR"
+ROOT_DIR="$SCRIPT_DIR/../.."
+DEV_CERT_DIR="$ROOT_DIR/dev/ssl/devcert"
+
+cd "$SCRIPT_DIR"
+rm -rf "$DEV_CERT_DIR"
+mkdir -p "$DEV_CERT_DIR" ca
+
+openssl \
+  req \
+  -x509 \
+  -sha256 \
+  -days 356 \
+  -nodes \
+  -newkey rsa:2048 \
+  -subj "/CN=93 Million Root CA/C=UK/L=Newcastle upon Tyne" \
+  -keyout ca/privkey.pem \
+  -out ca/cert.pem
+
+openssl genrsa -out "$DEV_CERT_DIR/privkey.pem" 2048
+
+openssl req -new -key "$DEV_CERT_DIR/privkey.pem" -out "$DEV_CERT_DIR/request.csr" -config csr.conf
+
+openssl x509 -req \
+    -in "$DEV_CERT_DIR/request.csr" \
+    -CA ca/cert.pem -CAkey ca/privkey.pem \
+    -CAcreateserial -out "$DEV_CERT_DIR/cert.pem" \
+    -days 365 \
+    -sha256 -extfile cert.conf
+
+rm "$DEV_CERT_DIR/request.csr"
+cp ca/cert.pem "$DEV_CERT_DIR/ca.pem"
+cat "$DEV_CERT_DIR/cert.pem" "$DEV_CERT_DIR/ca.pem" > "$DEV_CERT_DIR/fullchain.pem"

@@ -1,0 +1,102 @@
+networks:
+  default:
+    name: punk
+
+volumes:
+  punk-data:
+    name: punk-data
+
+services:
+  # http-proxy:
+  #   container_name: plexmissionhttpproxy
+  #   image: gitlab.93m.org:5050/93m/punk/service/http-proxy:latest
+  #   restart: always
+  #   volumes:
+  #     - ./dev/ssl/devcert:/etc/certcache/web:ro
+  #     - ./http-proxy/conf.d:/etc/nginx/conf.d:ro
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   depends_on:
+  #     - plexmissioncontrolpanelapp
+  #     - plexmissioncontrolpanelservice
+  #   labels:
+  #     com.93million.containerType: system
+  # plexmissioncontrolpanelapp:
+  #   container_name: plexmissioncontrolpanelapp
+  #   image: gitlab.93m.org:5050/93m/punk/app/control-panel:latest
+  #   restart: always
+  #   environment:
+  #     NODE_ENV: development
+  #   volumes:
+  #     - ./control-panel-app/dist/:/app/dist/:ro
+  #     - ./control-panel-app/index.html:/app/index.html:ro
+  #     - ./control-panel-app/package.json:/app/package.json:ro
+  #     - ./control-panel-app/package-lock.json:/app/package-lock.json:rw
+  #     - ./control-panel-app/src/:/app/src/:ro
+  #     - ./control-panel-app/src/public/:/app/src/public/:ro
+  #     - ./control-panel-app/vite.config.ts:/app/vite.config.ts:ro
+  #     - ./dev/ssl/devcert:/etc/certcache/web:ro
+  #     - punk-data:/files:ro
+  #   extra_hosts:
+  #     - controlpanelservice.punk.loc:host-gateway
+  #   labels:
+  #     com.93million.containerType: system
+  #   command: ['npm', 'run', 'dev']
+  plexmissioncontrolpanel:
+    container_name: service.93million.rapptor
+    image: gitlab.93m.org:5050/93m/punk/app/control-panel:latest
+    restart: always
+    environment:
+      NODE_ENV: development
+      NODE_TLS_REJECT_UNAUTHORIZED: '0'
+      PUNK_APP_STORE_REPO: 'https://gitlab.93m.org/93m/punk/app-store/app.93million.appstore.git'
+      PUNK_DOCKER_CONFIG_PATH: '/app/docker/config.json'
+    # env_file:
+    #   - .env
+    ports:
+      - 80:80
+      - 443:443
+      - 9229:9229
+      - 9231:9231
+      - 4000:4000
+      - 4002:4002
+    volumes:
+      - ./:/app/system:rw
+      - ./.env:/app/.env:rw
+      - ./apps:/app/apps:rw
+      - ./appstore:/app/appstore:rw
+      - ./appstorerepo:/appstorerepo:ro
+      - ./base:/app/base:rw
+      - ./accounts:/app/accounts:rw
+      # - ./control-panel/entrypoint.sh:/app/entrypoint.sh:ro
+      - ./control-panel/nodemon.json:/app/nodemon.json:ro
+      - ./control-panel/package.json:/app/package.json:ro
+      - ./control-panel/package-lock.json:/app/package-lock.json:rw
+      - ./control-panel/src/:/app/src/:ro
+      - ./control-panel/var:/app/var:rw
+      - ./control-panel/web/dist/:/app/web/dist/:ro
+      - ./control-panel/web/index.html:/app/web/index.html:ro
+      - ./control-panel/web/package.json:/app/web/package.json:ro
+      - ./control-panel/web/package-lock.json:/app/web/package-lock.json:rw
+      - ./control-panel/web/src/:/app/web/src/:ro
+      - ./control-panel/web/src/public/:/app/web/src/public/:ro
+      - ./control-panel/web/vite.config.ts:/app/web/vite.config.ts:ro
+      # - ./dev/ssh:/root/.ssh:rw
+      - ./dev/ssl/devcert:/etc/certcache/web:ro
+      - ./docker/config.json:/app/docker/config.json:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - punk-data:/files:rw
+    extra_hosts:
+      - controlpanelservice.punk.loc:host-gateway
+      - controlpanelservice-static.punk.loc:host-gateway
+    labels:
+      com.93million.containerType: system
+    # command: ['./node_modules/.bin/nodemon']
+  docker-container:
+    image: docker:26.1.0-dind-alpine3.19
+    container_name: dockerrun
+    restart: 'no'
+    labels:
+      com.93million.containerType: system
+    command: ['true']

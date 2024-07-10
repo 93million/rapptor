@@ -1,0 +1,27 @@
+#! /usr/bin/env bash
+
+set -e
+
+(
+  echo "Started build of control-panel-app"
+  cd ./control-panel-app &&
+  docker build -t gitlab.93m.org:5050/93m/punk/app/control-panel . 2> /dev/null &&
+  echo "Completed build of control-panel-app" ||
+  echo "Failed to build control-panel-app"
+) &
+(
+  echo "Started build of control-panel-service"
+  cd ./control-panel-service &&
+  docker build --build-arg NPM_TOKEN=$NPM_TOKEN -t gitlab.93m.org:5050/93m/punk/service/control-panel . 2> /dev/null &&
+  echo "Completed build of control-panel-service" ||
+  echo "Failed to build control-panel-service"
+) &
+(
+  echo "Started build of http-proxy"
+  cd ./http-proxy &&
+  docker build -t gitlab.93m.org:5050/93m/punk/service/http-proxy . 2> /dev/null &&
+  echo "Completed build of http-proxy" ||
+  echo "Failed to build http-proxy"
+) &
+
+wait
