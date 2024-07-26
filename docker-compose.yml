@@ -9,7 +9,7 @@ volumes:
 services:
   plexmissioncontrolpanel:
     container_name: service.93million.rapptor
-    image: gitlab.93m.org:5050/93m/punk/system/os:latest
+    image: gitlab.93m.org:5050/93m/punk/system/os:0.1
     restart: always
     environment:
       NODE_ENV: production
