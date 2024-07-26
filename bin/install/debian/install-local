@@ -44,7 +44,7 @@ configure_user_data()
   if user_exists "$INITIAL_USERNAME"; then
     docker compose run \
       --rm \
-      plexmissioncontrolpanelservice \
+      plexmissioncontrolpanel \
       npm run cli -- \
       updateuser \
       --admin \
@@ -55,7 +55,7 @@ configure_user_data()
   else
     docker compose run \
       --rm \
-      plexmissioncontrolpanelservice \
+      plexmissioncontrolpanel \
       npm run cli -- \
       createuser \
       --admin \
@@ -72,7 +72,7 @@ create_instance_data()
 {
   docker compose run \
     --rm \
-    plexmissioncontrolpanelservice \
+    plexmissioncontrolpanel \
     npm run cli -- \
     setinfo \
     -c "$CERTCACHE_CERTBOT_EMAIL" \
@@ -135,19 +135,19 @@ install_docker()
 install_apps() {
   docker compose run \
     --rm \
-    plexmissioncontrolpanelservice \
+    plexmissioncontrolpanel \
     npm run cli -- \
     install \
     app.93million.plex
   docker compose run \
     --rm \
-    plexmissioncontrolpanelservice \
+    plexmissioncontrolpanel \
     npm run cli -- \
     install \
     app.93million.transmission
   docker compose run \
     --rm \
-    plexmissioncontrolpanelservice \
+    plexmissioncontrolpanel \
     npm run cli -- \
     install \
     app.93million.wg-easy
