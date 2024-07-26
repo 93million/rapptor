@@ -50,8 +50,7 @@ configure_user_data()
       --admin \
       -p "$INITIAL_USERPASS" \
       "$INITIAL_USERNAME" \
-      > /dev/null \
-      2> /dev/null
+      > /dev/null
   else
     docker compose run \
       --rm \
@@ -62,8 +61,7 @@ configure_user_data()
       -p \
       "$INITIAL_USERPASS" \
       "$INITIAL_USERNAME" \
-      > /dev/null \
-      2> /dev/null
+      > /dev/null
   fi
   echo "Done"
 }
@@ -78,7 +76,8 @@ create_instance_data()
     -c "$CERTCACHE_CERTBOT_EMAIL" \
     -n "$NAME" \
     -s "$SERVICE_NAME" \
-    -u "$DOMAINS"
+    -u "$DOMAINS" \
+    -d "$INSTALL_DIR"
 }
 
 exit_with_usage_msg()
@@ -180,19 +179,17 @@ pull_docker_images()
 {
   echo -n "Pulling docker images... "
   docker login -u "$DEPLOY_USER" -p "$DEPLOY_PASSWORD" "$DOCKER_REGISTRY" \
-    > /dev/null \
-    2> /dev/null
+    > /dev/null
   docker compose -f "$COMPOSE_FILE" pull \
-    > /dev/null \
-    2> /dev/null
+    > /dev/null
   echo "Done"
 }
 
 restart_app()
 {
   echo -n "Restarting app... "
-  docker compose -f "$COMPOSE_FILE" down > /dev/null 2> /dev/null
-  docker compose -f "$COMPOSE_FILE" up -d  > /dev/null 2> /dev/null
+  docker compose -f "$COMPOSE_FILE" down --remove-orphans > /dev/null
+  docker compose -f "$COMPOSE_FILE" up -d  > /dev/null
   echo "Done"
 }
 
