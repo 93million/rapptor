@@ -10,6 +10,4 @@
 /certcache
 /control-panel
 /dev/docker/config.json
-/dev/ssh
 /dev/ssl
-/var
