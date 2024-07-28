@@ -9,5 +9,4 @@
 /bin/generate-dev-certs/ca
 /certcache
 /control-panel
-/dev/docker/config.json
-/dev/ssl
+/dev

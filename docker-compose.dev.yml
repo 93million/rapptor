@@ -1,21 +1,21 @@
 networks:
   default:
-    name: punk
+    name: rapptor
 
 volumes:
-  punk-data:
-    name: punk-data
+  rapptor-data:
+    name: rapptor-data
 
 services:
-  plexmissioncontrolpanel:
+  rapptorcontrolpanel:
     container_name: service.93million.rapptor
-    image: gitlab.93m.org:5050/93m/punk/system/os:dev
+    image: gitlab.93m.org:5050/93m/rapptor/system/os:dev
     restart: always
     environment:
       NODE_ENV: development
       NODE_TLS_REJECT_UNAUTHORIZED: '0'
-      PUNK_APP_STORE_REPO: 'https://gitlab.93m.org/93m/punk/app-store/app.93million.appstore.git'
-      PUNK_DOCKER_CONFIG_PATH: '/app/docker/config.json'
+      RAPPTOR_APP_STORE_REPO: 'https://gitlab.93m.org/93m/rapptor/app-store/app.93million.appstore.git'
+      RAPPTOR_DOCKER_CONFIG_PATH: '/app/docker/config.json'
     env_file:
       - .env
     ports:
@@ -44,13 +44,11 @@ services:
       - ./control-panel/web/package-lock.json:/app/web/package-lock.json:rw
       - ./control-panel/web/src/:/app/web/src/:ro
       - ./control-panel/web/vite.config.ts:/app/web/vite.config.ts:ro
+      - ./control-panel/tsconfig.json:/app/tsconfig.json:ro
       - ./dev/ssl/devcert:/etc/certcache/web:ro
       - ./docker/config.json:/app/docker/config.json:ro
       - /var/run/docker.sock:/var/run/docker.sock:rw
-      - punk-data:/files:rw
-    extra_hosts:
-      - controlpanelservice.punk.loc:host-gateway
-      - controlpanelservice-static.punk.loc:host-gateway
+      - rapptor-data:/files:rw
     labels:
       com.93million.containerType: system
   docker-container:
