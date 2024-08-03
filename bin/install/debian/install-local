@@ -137,19 +137,7 @@ install_apps() {
     rapptorcontrolpanel \
     npm run cli -- \
     install \
-    app.93million.plex
-  docker compose run \
-    --rm \
-    rapptorcontrolpanel \
-    npm run cli -- \
-    install \
-    app.93million.transmission
-  docker compose run \
-    --rm \
-    rapptorcontrolpanel \
-    npm run cli -- \
-    install \
-    app.93million.wg-easy
+    app.93million.plex,app.93million.transmission,app.93million.wg-easy
 }
 
 install_git()
