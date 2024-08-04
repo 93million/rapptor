@@ -29,7 +29,7 @@ services:
       - ./appstore:/app/appstore:rw
       - ./appstorerepo:/appstorerepo:ro
       - ./accounts:/app/accounts:rw
-      - ./base:/app/base:rw
+      - ./base:/base:rw
       - ./certcache/certs:/etc/certcache:ro
       - ./docker/config.json:/app/docker/config.json:ro
       - /var/run/docker.sock:/var/run/docker.sock:rw

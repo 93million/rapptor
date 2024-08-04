@@ -32,7 +32,7 @@ services:
       - ./appstore:/app/appstore:rw
       - ./appstorerepo:/appstorerepo:ro
       - ./accounts:/app/accounts:rw
-      - ./base:/app/base:rw
+      - ./base:/base:rw
       - ./control-panel/entrypoint.sh:/app/entrypoint.sh:rw
       - ./control-panel/nodemon.json:/app/nodemon.json:ro
       - ./control-panel/package.json:/app/package.json:ro
