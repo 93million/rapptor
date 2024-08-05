@@ -104,8 +104,6 @@ install_app()
 
   git checkout "$GIT_BRANCH"
   git reset --hard origin/$GIT_BRANCH
-
-  docker compose -f "$COMPOSE_FILE" pull > /dev/null
 }
 
 install_docker()
