@@ -5,6 +5,18 @@ set -e
 SCRIPT_DIR=$(dirname "$0")
 E_MISSING_ARGS=1
 
+error() {
+  local parent_lineno="$1"
+  local message="$2"
+  local code="${3:-1}"
+  if [[ -n "$message" ]] ; then
+    echo "Error on or near line ${parent_lineno}: ${message}; exiting with status ${code}"
+  else
+    echo "Error on or near line ${parent_lineno}; exiting with status ${code}"
+  fi
+  exit "${code}"
+}
+
 exit_with_usage_msg()
 {
   echo $1
@@ -65,7 +77,7 @@ main()
   cat "$SCRIPT_DIR/install-local" | \
     ssh \
       "$SSH_USER@$HOST" \
-      /usr/bin/env sh /dev/stdin \
+      /usr/bin/env bash /dev/stdin \
       -b "$GIT_BRANCH" \
       -c "$CERTCACHE_CERTBOT_EMAIL" \
       -d "$DOMAINS" \
@@ -75,4 +87,5 @@ main()
       -u "$ACCOUNT_NAME"
 }
 
+trap 'error ${LINENO}' ERR
 main "$@"
