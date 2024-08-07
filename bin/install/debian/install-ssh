@@ -78,13 +78,13 @@ main()
     ssh \
       "$SSH_USER@$HOST" \
       /usr/bin/env bash /dev/stdin \
-      -b "$GIT_BRANCH" \
-      -c "$CERTCACHE_CERTBOT_EMAIL" \
-      -d "$DOMAINS" \
-      -n "$NAME" \
-      -p "$ACCOUNT_PASS" \
-      -s "$SERVICE_NAME" \
-      -u "$ACCOUNT_NAME"
+      -b \"$GIT_BRANCH\" \
+      -c \"$CERTCACHE_CERTBOT_EMAIL\" \
+      -d \"$DOMAINS\" \
+      -n \"$NAME\" \
+      -p \"$ACCOUNT_PASS\" \
+      -s \"$SERVICE_NAME\" \
+      -u \"$ACCOUNT_NAME\"
 }
 
 trap 'error ${LINENO}' ERR

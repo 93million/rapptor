@@ -111,11 +111,6 @@ install_app()
   cd "$INSTALL_DIR"
   git remote set-url origin "$REPO_URI"
   git fetch
-
-  if [ -z "$GIT_BRANCH" ]; then
-    GIT_BRANCH="master"
-  fi
-
   git checkout "$GIT_BRANCH"
   git reset --hard origin/$GIT_BRANCH
 }
@@ -165,7 +160,7 @@ parse_args()
   local OPTIND OPTARG flag
   while getopts "b:c:d:h:n:p:s:u:" flag; do
     case "$flag" in
-      b) GIT_BRANCH=$OPTARG;;
+      b) GIT_BRANCH=${OPTARG:-master};;
       c) CERTCACHE_CERTBOT_EMAIL=$OPTARG;;
       d) DOMAINS=$OPTARG;;
       n) NAME=$OPTARG;;
