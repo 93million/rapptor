@@ -49,7 +49,7 @@ checkrequirements()
 parse_args()
 {
   local OPTIND OPTARG flag
-  while getopts "b:c:d:h:n:p:P:s:u:U:" flag; do
+  while getopts "b:c:d:h:n:p:P:u:U:" flag; do
     case "$flag" in
       b) GIT_BRANCH=$OPTARG;;
       c) CERTCACHE_CERTBOT_EMAIL=$OPTARG;;
@@ -58,7 +58,6 @@ parse_args()
       n) NAME=$OPTARG;;
       p) ACCOUNT_PASS=$OPTARG;;
       P) SSH_PASS=$OPTARG;;
-      s) SERVICE_NAME=$OPTARG;;
       u) ACCOUNT_NAME=$OPTARG;;
       U) SSH_USER=${OPTARG};;
     esac
@@ -83,7 +82,6 @@ main()
       -d \"$DOMAINS\" \
       -n \"$NAME\" \
       -p \"$ACCOUNT_PASS\" \
-      -s \"$SERVICE_NAME\" \
       -u \"$ACCOUNT_NAME\"
 }
 
