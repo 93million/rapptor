@@ -3,7 +3,7 @@
 set -e
 
 DEPLOY_PASSWORD=""
-DEPLOY_USER="customer"
+DEPLOY_USER="deploy"
 APP_REPO="gitlab.93m.org/93m/rapptor/system/deploy.git"
 DOCKER_REGISTRY="gitlab.93m.org:5050"
 
