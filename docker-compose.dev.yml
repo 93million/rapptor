@@ -38,6 +38,7 @@ services:
       - ./control-panel/package.json:/app/package.json:ro
       - ./control-panel/package-lock.json:/app/package-lock.json:rw
       - ./control-panel/src/:/app/src/:ro
+      - ./control-panel/var/templates/:/app/var/templates:ro
       - ./control-panel/web/dist/:/app/web/dist/:ro
       - ./control-panel/web/index.html:/app/web/index.html:ro
       - ./control-panel/web/package.json:/app/web/package.json:ro
