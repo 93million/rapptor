@@ -16,7 +16,7 @@ services:
       NODE_TLS_REJECT_UNAUTHORIZED: '0'
       RAPPTOR_APP_STORE_REPO: 'https://gitlab.93m.org/93m/rapptor/app-store/app.93million.appstore.git'
       RAPPTOR_DOCKER_CONFIG_PATH: '/app/docker/config.json'
-      RAPPTOR_NS_SERVICE_URL: 'https://host.docker.internal:4433'
+      RAPPTOR_NS_SERVICE_URL: 'https://host.docker.internal:3453'
     env_file:
       - .env
     ports:
@@ -47,11 +47,39 @@ services:
       - ./control-panel/web/src/:/app/web/src/:ro
       - ./control-panel/web/vite.config.ts:/app/web/vite.config.ts:ro
       - ./control-panel/tsconfig.json:/app/tsconfig.json:ro
-      - ./dev/ssl/devcert:/etc/certcache/web:ro
+      - ./certcache/certs/web:/etc/certcache/web:ro
       - ./docker/config.json:/app/docker/config.json:ro
       - ./var/setup:/app/var/setup:ro
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - rapptor-data:/files:rw
+    labels:
+      com.93million.containerType: system
+  certcache-server:
+    container_name: certcache-server
+    image: ghcr.io/93million/certcache:0.6.0
+    restart: always
+    volumes:
+      - ./certcache/catkeys/:/certcache/catkeys/:rw
+      - ./dev/ssl/:/certcache/cache/thirdparty/:rw
+    environment:
+      CERTCACHE_CERTBOT_DOMAINS: |
+        - 'sfasfs.co'
+    command: ['serve']
+    ports:
+      - '4433:4433/tcp'
+    labels:
+      com.93million.containerType: system
+  certcache:
+    container_name: certcache
+    image: ghcr.io/93million/certcache:0.6.0
+    restart: always
+    volumes:
+      - ./certcache/catkeys/:/certcache/catkeys/:rw
+      - ./certcache/certs/:/certcache/certs/:rw
+    environment:
+      CERTCACHE_UPSTREAM: certcache-server
+    env_file:
+      - .env
     labels:
       com.93million.containerType: system
   docker-container:

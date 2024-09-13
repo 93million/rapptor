@@ -4,36 +4,58 @@ set -e
 
 SCRIPT=$(realpath "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT")
-echo "SCRIPT_DIR: $SCRIPT_DIR"
 ROOT_DIR="$SCRIPT_DIR/../.."
-DEV_CERT_DIR="$ROOT_DIR/dev/ssl/devcert"
+DEV_CERT_DIR="$ROOT_DIR/dev/ssl"
+CA_DIR="ca"
+CONF_DIR="conf"
 
 cd "$SCRIPT_DIR"
 rm -rf "$DEV_CERT_DIR"
-mkdir -p "$DEV_CERT_DIR" ca
+mkdir -p "$DEV_CERT_DIR" "$CA_DIR"
 
-openssl \
-  req \
-  -x509 \
-  -sha256 \
-  -days 356 \
-  -nodes \
-  -newkey rsa:2048 \
-  -subj "/CN=93 Million Root CA/C=UK/L=Newcastle upon Tyne" \
-  -keyout ca/privkey.pem \
-  -out ca/cert.pem
+gen_ca()
+{
+  if [[ ! -f "$CA_DIR"/cert.pem ]]; then
+    openssl \
+      req \
+      -x509 \
+      -sha256 \
+      -days 356 \
+      -nodes \
+      -newkey rsa:2048 \
+      -subj "/CN=93 Million Root CA/C=UK/L=Newcastle upon Tyne" \
+      -keyout "$CA_DIR"/privkey.pem \
+      -out "$CA_DIR"/cert.pem
+  fi
+}
 
-openssl genrsa -out "$DEV_CERT_DIR/privkey.pem" 2048
+gen_cert()
+{
+  CERT_CONF_DIR="$1"
+  CERT_OUT_DIR="$2"
 
-openssl req -new -key "$DEV_CERT_DIR/privkey.pem" -out "$DEV_CERT_DIR/request.csr" -config csr.conf
+  mkdir -p "$CERT_OUT_DIR"
 
-openssl x509 -req \
-    -in "$DEV_CERT_DIR/request.csr" \
-    -CA ca/cert.pem -CAkey ca/privkey.pem \
-    -CAcreateserial -out "$DEV_CERT_DIR/cert.pem" \
-    -days 365 \
-    -sha256 -extfile cert.conf
+  openssl genrsa -out "$CERT_OUT_DIR/privkey.pem" 2048
+  openssl req -new -key "$CERT_OUT_DIR/privkey.pem" -out "$CERT_OUT_DIR/request.csr" -config "$CERT_CONF_DIR/csr.conf"
+  openssl x509 -req \
+      -in "$CERT_OUT_DIR/request.csr" \
+      -CA "$CA_DIR"/cert.pem -CAkey "$CA_DIR"/privkey.pem \
+      -CAcreateserial -out "$CERT_OUT_DIR/cert.pem" \
+      -days 365 \
+      -sha256 -extfile "$CERT_CONF_DIR/cert.conf"
 
-rm "$DEV_CERT_DIR/request.csr"
-cp ca/cert.pem "$DEV_CERT_DIR/ca.pem"
-cat "$DEV_CERT_DIR/cert.pem" "$DEV_CERT_DIR/ca.pem" > "$DEV_CERT_DIR/fullchain.pem"
+  rm "$CERT_OUT_DIR/request.csr"
+  cp "$CA_DIR"/cert.pem "$CERT_OUT_DIR/ca.pem"
+
+  cat "$CERT_OUT_DIR/cert.pem" "$CERT_OUT_DIR/ca.pem" > "$CERT_OUT_DIR/fullchain.pem"
+}
+
+main()
+{
+  gen_ca
+  gen_cert "$CONF_DIR/setup" "$DEV_CERT_DIR/setup"
+  gen_cert "$CONF_DIR/instance" "$DEV_CERT_DIR/instance"
+}
+
+main
