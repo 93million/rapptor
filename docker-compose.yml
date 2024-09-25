@@ -32,7 +32,7 @@ services:
       - ./base:/base:rw
       - ./certcache/certs:/etc/certcache:ro
       - ./docker/config.json:/app/docker/config.json:ro
-      - ./var/setup:/app/var/setup:ro
+      - ./var/setup:/app/var/setup:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - rapptor-data:/files:rw
     labels:
