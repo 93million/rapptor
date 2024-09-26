@@ -6,6 +6,7 @@ DEPLOY_PASSWORD=""
 DEPLOY_USER="deploy"
 APP_REPO="gitlab.93m.org/93m/rapptor/system/deploy.git"
 DOCKER_REGISTRY="gitlab.93m.org:5050"
+CERTCACHE_CERTBOT_EMAIL="certbot@93m.org"
 
 E_MISSING_ARGS=1
 E_REQUIRES_ROOT=2
@@ -19,64 +20,20 @@ check_requirements()
   if [ $( id -u ) -ne 0 ]; then
     exit_with_usage_msg "Script must be run as root" $E_REQUIRES_ROOT
   fi
-
-  if [ -z "$DOMAINS" ]; then
-    exit_with_usage_msg "Domains are missing" $E_MISSING_ARGS
-  fi
-
-  if [ -z "$CERTCACHE_CERTBOT_EMAIL" ]; then
-    exit_with_usage_msg "Certbot email is missing" $E_MISSING_ARGS
-  fi
-
-
-  if [ -z "$INITIAL_USERNAME" ]; then
-    exit_with_usage_msg "Username is missing" $E_MISSING_ARGS
-  fi
-
-  if [ -z "$INITIAL_USERPASS" ]; then
-    exit_with_usage_msg "Password is missing" $E_MISSING_ARGS
-  fi
-}
-
-configure_user_data()
-{
-  echo -n "Configuring user data... "
-  if user_exists "$INITIAL_USERNAME"; then
-    docker compose run \
-      --rm \
-      rapptoros \
-      npm run cli -- \
-      updateuser \
-      --admin \
-      -p "$INITIAL_USERPASS" \
-      "$INITIAL_USERNAME" \
-      > /dev/null
-  else
-    docker compose run \
-      --rm \
-      rapptoros \
-      npm run cli -- \
-      createuser \
-      --admin \
-      -p \
-      "$INITIAL_USERPASS" \
-      "$INITIAL_USERNAME" \
-      > /dev/null
-  fi
-  echo "Done"
 }
 
 create_instance_data()
 {
+
   docker compose run \
     --rm \
     rapptoros \
     npm run cli -- \
     setinfo \
     -c "$CERTCACHE_CERTBOT_EMAIL" \
-    -n "$NAME" \
-    -u "$DOMAINS" \
-    -d "$INSTALL_DIR" \
+    -n "Setup Rapptor" \
+    -r "$INSTALL_DIR" \
+    -s
     > /dev/null
 }
 
@@ -96,7 +53,7 @@ error()
 exit_with_usage_msg()
 {
   echo $1
-  echo "$(basename $0) [-b git-branch] -c certbot_email -d <domain> -n <instance-name> -p <account-password> -u <account-user>"
+  echo "$(basename $0) [-b git-branch]"
   exit $2
 }
 
@@ -154,17 +111,24 @@ install_git()
   fi
 }
 
+output_setup_link()
+{
+    SETUP_LINK="$(docker compose run --rm rapptoros npm run --no-update-notifier --silent cli -- setuplink)"
+    cat "$INSTALL_DIR/bin/install/logo.txt"
+    echo "================================================================================"
+    echo "                              RAPPTOR IS INSTALLED!"
+    echo "--------------------------------------------------------------------------------"
+    echo "Follow this link to set up your instance:"
+    echo $SETUP_LINK
+    echo "================================================================================"
+}
+
 parse_args()
 {
   local OPTIND OPTARG flag
-  while getopts "b:c:d:h:n:p:u:" flag; do
+  while getopts "b:h:" flag; do
     case "$flag" in
       b) GIT_BRANCH=$OPTARG;;
-      c) CERTCACHE_CERTBOT_EMAIL=$OPTARG;;
-      d) DOMAINS=$OPTARG;;
-      n) NAME=$OPTARG;;
-      p) INITIAL_USERPASS=$OPTARG;;
-      u) INITIAL_USERNAME=$OPTARG;;
     esac
   done
 
@@ -206,10 +170,10 @@ main()
   install_app
   touch "$INSTALL_DIR/.env"
   pull_docker_images
-  configure_user_data
   create_instance_data
   install_apps
   restart_app
+  output_setup_link
 }
 
 trap 'error ${LINENO}' ERR
