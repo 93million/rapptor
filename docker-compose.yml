@@ -7,7 +7,7 @@ volumes:
     name: rapptor-data
 
 services:
-  rapptorcontrolpanel:
+  rapptoros:
     container_name: service.93million.rapptor
     image: gitlab.93m.org:5050/93m/rapptor/system/os:0.1
     restart: always

@@ -6,4 +6,4 @@ SCRIPT=$(realpath "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT")
 PROJECT_DIR="$SCRIPT_DIR/.."
 
-docker compose -f "$PROJECT_DIR/docker-compose.yml" run --rm rapptorcontrolpanel npm --no-update-notifier --silent run cli -- $@
+docker compose -f "$PROJECT_DIR/docker-compose.yml" run --rm rapptoros npm --no-update-notifier --silent run cli -- $@
