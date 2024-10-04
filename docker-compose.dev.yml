@@ -83,6 +83,8 @@ services:
       - .env
     labels:
       com.93million.containerType: system
+    depends_on:
+      - certcache-server
   docker-container:
     image: docker:26.1.0-dind-alpine3.19
     container_name: dockerrun
