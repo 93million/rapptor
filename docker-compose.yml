@@ -42,6 +42,7 @@ services:
     image: ghcr.io/93million/certcache:0.6.0
     restart: always
     volumes:
+      - ./certcache/cache/:/certcache/cache/:rw
       - ./certcache/catkeys/:/certcache/catkeys/:rw
       - ./certcache/certs/:/certcache/certs/:rw
     environment:
