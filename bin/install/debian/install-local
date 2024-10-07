@@ -111,6 +111,12 @@ install_git()
   fi
 }
 
+install_cli()
+{
+  mkdir -p "/usr/local/bin/"
+  ln -fs "$INSTALL_DIR/bin/rapptor" "/usr/local/bin/rapptor"
+}
+
 output_setup_link()
 {
     SETUP_LINK="$(docker compose run --rm rapptoros npm run --no-update-notifier --silent cli -- setuplink)"
@@ -168,6 +174,7 @@ main()
   install_docker
   install_git
   install_app
+  install_cli
   touch "$INSTALL_DIR/.env"
   pull_docker_images
   create_instance_data
