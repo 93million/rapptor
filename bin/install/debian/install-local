@@ -26,6 +26,7 @@ create_instance_data()
 {
 
   docker compose run \
+    -T \
     --rm \
     rapptoros \
     npm run cli -- \
@@ -96,6 +97,7 @@ install_docker()
 
 install_apps() {
   docker compose run \
+    -T \
     --rm \
     rapptoros \
     npm run cli -- \
@@ -119,7 +121,7 @@ install_cli()
 
 output_setup_link()
 {
-    SETUP_LINK="$(docker compose run --rm rapptoros npm run --no-update-notifier --silent cli -- setuplink)"
+    SETUP_LINK="$(docker compose run -T --rm rapptoros npm run --no-update-notifier --silent cli -- setuplink)"
     cat "$INSTALL_DIR/bin/install/logo.txt"
     echo "================================================================================"
     echo "                              RAPPTOR IS INSTALLED!"
