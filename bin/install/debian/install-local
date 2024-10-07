@@ -132,7 +132,7 @@ output_setup_link()
 parse_args()
 {
   local OPTIND OPTARG flag
-  while getopts "b:h:" flag; do
+  while getopts "b:" flag; do
     case "$flag" in
       b) GIT_BRANCH=$OPTARG;;
     esac
