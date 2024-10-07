@@ -34,7 +34,6 @@ create_instance_data()
     -c "$CERTCACHE_CERTBOT_EMAIL" \
     -n "Setup Rapptor" \
     -r "$INSTALL_DIR" \
-    -s
     > /dev/null
 }
 
