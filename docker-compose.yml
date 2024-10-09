@@ -14,7 +14,6 @@ services:
     environment:
       NODE_ENV: production
       RAPPTOR_APP_STORE_REPO: 'https://gitlab.93m.org/93m/rapptor/app-store/app.93million.appstore.git'
-      RAPPTOR_DOCKER_CONFIG_PATH: '/app/docker/config.json'
     env_file:
       - .env
     ports:

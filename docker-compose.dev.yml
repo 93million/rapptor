@@ -15,7 +15,6 @@ services:
       NODE_ENV: development
       NODE_TLS_REJECT_UNAUTHORIZED: '0'
       RAPPTOR_APP_STORE_REPO: 'https://gitlab.93m.org/93m/rapptor/app-store/app.93million.appstore.git'
-      RAPPTOR_DOCKER_CONFIG_PATH: '/app/docker/config.json'
       RAPPTOR_NS_SERVICE_URL: 'https://host.docker.internal:3453'
       RAPPTOR_SETUP_DOMAIN: '1234.setup.rapptor.loc'
     env_file:
