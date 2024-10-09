@@ -74,7 +74,6 @@ install_app()
 install_docker()
 {
   if ! command -v docker > /dev/null; then
-    # source: https://docs.docker.com/engine/install/debian/
     apt-get install -y ca-certificates curl > /dev/null
     install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
@@ -125,8 +124,11 @@ output_setup_link()
     echo "================================================================================"
     echo "                              RAPPTOR IS INSTALLED!"
     echo "--------------------------------------------------------------------------------"
-    echo "Follow this link to set up your instance:"
+    echo
+    echo "Follow this link to set up your instance (wait 60 seconds for app to start):"
+    echo
     echo $SETUP_LINK
+    echo
     echo "================================================================================"
 }
 
