@@ -100,7 +100,7 @@ install_apps() {
     rapptoros \
     npm run cli -- \
     install \
-    app.93million.plex,app.93million.transmission,app.93million.wg-easy \
+    app.93million.wg-easy \
     > /dev/null
 }
 
