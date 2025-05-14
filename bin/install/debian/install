@@ -163,12 +163,6 @@ restart_app()
   echo "Done"
 }
 
-user_exists()
-{
-  USERNAME="$1"
-  [ -d "$ACCOUNTS_DIR/$USERNAME" ]
-}
-
 main()
 {
   parse_args "$@"
