@@ -54,7 +54,6 @@ gen_cert()
 main()
 {
   gen_ca
-  gen_cert "$CONF_DIR/setup" "$DEV_CERT_DIR/setup"
   gen_cert "$CONF_DIR/instance" "$DEV_CERT_DIR/instance"
 }
 
