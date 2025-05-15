@@ -19,9 +19,9 @@ if [ "$CMD" != "start" ] && [ "$CMD" != "stop" ] && [ "$CMD" != "restart" ]; the
 fi
 
 if [ "$CMD" == "stop" ] || [ "$CMD" == "restart" ]; then
-  docker compose -f "$COMPOSEFILE" down
+  docker compose -f "$COMPOSEFILE" down --remove-orphans
 fi
 
 if [ "$CMD" == "start" ] || [ "$CMD" == "restart" ]; then
-  docker compose -f "$COMPOSEFILE" up -d
+  docker compose -f "$COMPOSEFILE" up -d --remove-orphans
 fi
