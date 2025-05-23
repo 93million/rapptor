@@ -13,7 +13,6 @@ services:
     restart: always
     environment:
       NODE_ENV: production
-      RAPPTOR_APP_STORE_REPO: 'https://gitlab.93m.org/93m/rapptor/app-store/app.93million.appstore.git'
     env_file:
       - .env
     ports:
