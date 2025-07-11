@@ -33,6 +33,7 @@ services:
       - ./appstorerepo:/appstorerepo:ro
       - ./accounts:/app/accounts:rw
       - ./base:/base:rw
+      - ./control-panel/base/apps:/app/base/apps:rw
       - ./control-panel/entrypoint.sh:/app/entrypoint.sh:rw
       - ./control-panel/nginx/conf.d/:/etc/nginx/http.d/:rw
       - ./control-panel/nodemon.json:/app/nodemon.json:ro
