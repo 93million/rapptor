@@ -3,8 +3,8 @@ networks:
     name: rapptor
 
 volumes:
-  rapptor-data:
-    name: rapptor-data
+  rapptor-user-data:
+    name: rapptor-user-data
 
 services:
   rapptoros:
@@ -32,7 +32,7 @@ services:
       - ./docker/config.json:/app/docker/config.json:ro
       - ./var/token:/app/var/token:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
-      - rapptor-data:/files:rw
+      - rapptor-user-data:/files:rw
     labels:
       com.93million.containerType: system
   certcache:
