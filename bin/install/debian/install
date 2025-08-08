@@ -71,6 +71,16 @@ install_app()
   git reset --hard origin/$GIT_BRANCH
 }
 
+disable_systemd_resolve()
+{
+  apt install -y lsof
+  if lsof -i :53 | grep systemd-resolve; then
+    echo DNSStubListener=no >> /etc/systemd/resolved.conf
+    systemctl stop systemd-resolved
+    ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+  fi
+}
+
 install_docker()
 {
   if ! command -v docker > /dev/null; then
@@ -168,6 +178,7 @@ main()
   parse_args "$@"
   check_requirements
   apt-get update
+  disable_systemd_resolve
   install_docker
   install_git
   install_app
