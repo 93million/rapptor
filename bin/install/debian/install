@@ -24,17 +24,18 @@ check_requirements()
 
 create_instance_data()
 {
-
+  echo -n "Configuring instance data... "
   docker compose run \
     -T \
     --rm \
     rapptoros \
-    npm run cli -- \
+    npm --no-update-notifier --silent run cli -- \
     setinfo \
     -c "$CERTCACHE_CERTBOT_EMAIL" \
     -n "Setup Rapptor" \
     -r "$INSTALL_DIR" \
-    > /dev/null
+    > /dev/null 2> /dev/null
+  echo "done"
 }
 
 error()
@@ -59,31 +60,36 @@ exit_with_usage_msg()
 
 install_app()
 {
+  echo -n "Installing Rapptor... "
   REPO_URI="https://$DEPLOY_USER:$DEPLOY_PASSWORD@$APP_REPO"
   if [ ! -d "$INSTALL_DIR" ]; then
     mkdir -p "$INSTALL_DIR"
-    git clone "$REPO_URI" "$INSTALL_DIR"
+    git clone "$REPO_URI" "$INSTALL_DIR" > /dev/null
   fi
   cd "$INSTALL_DIR"
   git remote set-url origin "$REPO_URI"
-  git fetch
-  git checkout "$GIT_BRANCH"
-  git reset --hard origin/$GIT_BRANCH
+  git fetch > /dev/null 2> /dev/null
+  git checkout "$GIT_BRANCH" > /dev/null 2> /dev/null
+  git reset --hard origin/$GIT_BRANCH > /dev/null 2> /dev/null
+  echo "done"
 }
 
 disable_systemd_resolve()
 {
-  apt install -y lsof
-  if lsof -i :53 | grep systemd-resolve; then
+  apt-get install -y lsof > /dev/null
+  if lsof -i :53 | grep systemd-resolve > /dev/null; then
+    echo -n "Disabling systemd-resolve... "
     echo DNSStubListener=no >> /etc/systemd/resolved.conf
-    systemctl stop systemd-resolved
     ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+    systemctl stop systemd-resolved
+    echo "done"
   fi
 }
 
 install_docker()
 {
   if ! command -v docker > /dev/null; then
+    echo -n "Installing Docker... "
     apt-get install -y ca-certificates curl > /dev/null
     install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
@@ -99,25 +105,31 @@ install_docker()
       docker-ce-cli \
       containerd.io \
       docker-buildx-plugin \
-      docker-compose-plugin
+      docker-compose-plugin \
+      > /dev/null
+    echo "done"
   fi
 }
 
 install_apps() {
+  echo -n "Installing Rapptor base apps... "
   docker compose run \
     -T \
     --rm \
     rapptoros \
-    npm run cli -- \
+    npm --no-update-notifier --silent run cli -- \
     install \
     app.93million.wg-easy \
-    > /dev/null
+    > /dev/null 2> /dev/null
+  echo "done"
 }
 
 install_git()
 {
   if ! command -v git > /dev/null; then
-    apt-get install -y git
+    echo -n "Installing git... "
+    apt-get install -y git > /dev/null
+    echo "done"
   fi
 }
 
@@ -156,35 +168,35 @@ parse_args()
   fi
 }
 
-pull_docker_images()
+pull_container_images()
 {
-  echo -n "Pulling docker images... "
-  docker login -u "$DEPLOY_USER" -p "$DEPLOY_PASSWORD" "$DOCKER_REGISTRY" \
-    > /dev/null
+  echo -n "Pulling Rapptor container images... "
+  echo "$DEPLOY_PASSWORD" | docker login -u "$DEPLOY_USER" --password-stdin "$DOCKER_REGISTRY" \
+    > /dev/null 2> /dev/null
   docker compose -f "$COMPOSE_FILE" pull > /dev/null 2> /dev/null
-  echo "Done"
+  echo "done"
 }
 
 restart_app()
 {
   echo -n "Restarting app... "
-  docker compose -f "$COMPOSE_FILE" down --remove-orphans > /dev/null
-  docker compose -f "$COMPOSE_FILE" up -d  > /dev/null
-  echo "Done"
+  docker compose -f "$COMPOSE_FILE" down --remove-orphans > /dev/null 2> /dev/null
+  docker compose -f "$COMPOSE_FILE" up -d  > /dev/null 2> /dev/null
+  echo "done"
 }
 
 main()
 {
   parse_args "$@"
   check_requirements
-  apt-get update
+  apt-get update > /dev/null
   disable_systemd_resolve
   install_docker
   install_git
   install_app
   install_cli
   touch "$INSTALL_DIR/.env"
-  pull_docker_images
+  pull_container_images
   create_instance_data
   install_apps
   restart_app
