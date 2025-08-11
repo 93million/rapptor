@@ -14,6 +14,19 @@ INSTALL_DIR="/var/docker/rapptor"
 ACCOUNTS_DIR="$INSTALL_DIR/accounts"
 COMPOSE_FILE="$INSTALL_DIR/docker-compose.yml"
 
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get-install ()
+{
+  if ! apt-get -qqy install $@ > /dev/null; then
+    echo "Another process is blocking apt-get. Waiting for process to complete."
+    if ! apt-get -y -o DPkg::Lock::Timeout=600 install $@; then
+      E_CODE=$?
+      echo "Unable to install packages. Another process is blocking apt-get. Please wait for it to complete and try to install Rapptor again" 1>&2
+      exit $E_CODE
+    fi
+  fi
+}
 
 check_requirements()
 {
@@ -24,7 +37,7 @@ check_requirements()
 
 create_instance_data()
 {
-  echo -n "Configuring instance data... "
+  echo -n "Configuring instance data: "
   docker compose run \
     -T \
     --rm \
@@ -60,11 +73,11 @@ exit_with_usage_msg()
 
 install_app()
 {
-  echo -n "Installing Rapptor... "
+  echo -n "Installing Rapptor: "
   REPO_URI="https://$DEPLOY_USER:$DEPLOY_PASSWORD@$APP_REPO"
   if [ ! -d "$INSTALL_DIR" ]; then
     mkdir -p "$INSTALL_DIR"
-    git clone "$REPO_URI" "$INSTALL_DIR" > /dev/null
+    git clone "$REPO_URI" "$INSTALL_DIR" > /dev/null 2> /dev/null
   fi
   cd "$INSTALL_DIR"
   git remote set-url origin "$REPO_URI"
@@ -76,9 +89,9 @@ install_app()
 
 disable_systemd_resolve()
 {
-  apt-get install -y lsof > /dev/null
+  apt-get-install lsof
   if lsof -i :53 | grep systemd-resolve > /dev/null; then
-    echo -n "Disabling systemd-resolve... "
+    echo -n "Disabling systemd-resolve: "
     echo DNSStubListener=no >> /etc/systemd/resolved.conf
     ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
     systemctl stop systemd-resolved
@@ -89,8 +102,8 @@ disable_systemd_resolve()
 install_docker()
 {
   if ! command -v docker > /dev/null; then
-    echo -n "Installing Docker... "
-    apt-get install -y ca-certificates curl > /dev/null
+    echo -n "Installing Docker: "
+    apt-get-install ca-certificates curl
     install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
     chmod a+r /etc/apt/keyrings/docker.asc
@@ -98,21 +111,19 @@ install_docker()
       "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
       tee /etc/apt/sources.list.d/docker.list > /dev/null
-    apt-get update
-    apt-get install \
-      -y \
+    apt-get update > /dev/null
+    apt-get-install \
       docker-ce \
       docker-ce-cli \
       containerd.io \
       docker-buildx-plugin \
-      docker-compose-plugin \
-      > /dev/null
+      docker-compose-plugin
     echo "done"
   fi
 }
 
 install_apps() {
-  echo -n "Installing Rapptor base apps... "
+  echo -n "Installing Rapptor base apps: "
   docker compose run \
     -T \
     --rm \
@@ -127,8 +138,8 @@ install_apps() {
 install_git()
 {
   if ! command -v git > /dev/null; then
-    echo -n "Installing git... "
-    apt-get install -y git > /dev/null
+    echo -n "Installing git: "
+    apt-get-install git
     echo "done"
   fi
 }
@@ -141,6 +152,7 @@ install_cli()
 
 output_setup_link()
 {
+    echo "Generating setup link:"
     SETUP_LINK="$(docker compose run -T --rm rapptoros npm run --no-update-notifier --silent cli -- setuplink)"
     cat "$INSTALL_DIR/bin/install/logo.txt"
     echo "================================================================================"
@@ -170,16 +182,16 @@ parse_args()
 
 pull_container_images()
 {
-  echo -n "Pulling Rapptor container images... "
+  echo -n "Pulling Rapptor container images: "
   echo "$DEPLOY_PASSWORD" | docker login -u "$DEPLOY_USER" --password-stdin "$DOCKER_REGISTRY" \
     > /dev/null 2> /dev/null
   docker compose -f "$COMPOSE_FILE" pull > /dev/null 2> /dev/null
   echo "done"
 }
 
-restart_app()
+start_app()
 {
-  echo -n "Restarting app... "
+  echo -n "Starting Rapptor: "
   docker compose -f "$COMPOSE_FILE" down --remove-orphans > /dev/null 2> /dev/null
   docker compose -f "$COMPOSE_FILE" up -d  > /dev/null 2> /dev/null
   echo "done"
@@ -199,7 +211,7 @@ main()
   pull_container_images
   create_instance_data
   install_apps
-  restart_app
+  start_app
   output_setup_link
 }
 
