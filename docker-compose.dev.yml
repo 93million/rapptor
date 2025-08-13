@@ -35,7 +35,6 @@ services:
       - ./base:/base:rw
       - ./control-panel/base/apps:/app/base/apps:rw
       - ./control-panel/entrypoint.sh:/app/entrypoint.sh:rw
-      - ./control-panel/nginx/conf.d/:/etc/nginx/http.d/:rw
       - ./control-panel/nodemon.json:/app/nodemon.json:ro
       - ./control-panel/package.json:/app/package.json:ro
       - ./control-panel/package-lock.json:/app/package-lock.json:rw
@@ -49,7 +48,6 @@ services:
       - ./control-panel/web/vite.config.ts:/app/web/vite.config.ts:ro
       - ./control-panel/tsconfig.json:/app/tsconfig.json:ro
       - ./certcache/certs/web:/etc/certcache/web:ro
-      - ./dev/empty.file:/etc/nginx/http.d/control-panel-app.production.conf:ro
       - ./docker/config.json:/app/docker/config.json:ro
       - ./var/token:/app/var/token:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
