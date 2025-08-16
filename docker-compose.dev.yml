@@ -9,7 +9,7 @@ volumes:
 services:
   rapptoros:
     container_name: service.93million.rapptor
-    image: gitlab.93m.org:5050/93m/rapptor/system/os:0.1-dev
+    image: ${RAPPTOR_IMAGE_URI}
     restart: always
     environment:
       NODE_ENV: development

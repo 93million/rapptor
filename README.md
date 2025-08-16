@@ -20,7 +20,7 @@ RapptorVPN is free software that lets you run a VPN with Remote Apps on generic 
 6. Open a Command Prompt (on Windows) or Terminal (on Mac and Linux) and run the following command (replacing `<ip>` with the IP address):
 
 ```
-read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking accept-new" root@$IP "curl -s https://gitlab.93m.org/api/v4/projects/37/repository/files/bin%2Finstall%2Fdebian%2Finstall/raw | bash"
+read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking accept-new" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/debian/install | bash"
 ```
 
 7. When prompted, enter the server's IP address

@@ -2,11 +2,17 @@
 
 set -e
 
-DEPLOY_PASSWORD=""
-DEPLOY_USER="deploy"
-APP_REPO="gitlab.93m.org/93m/rapptor/system/deploy.git"
-DOCKER_REGISTRY="gitlab.93m.org:5050"
+APP_REPO_DEFAULT="github.com/93million/rapptor"
 CERTCACHE_CERTBOT_EMAIL="certbot@93m.org"
+APP_STORE_REPO_DEFAULT="https://github.com/93million/rapptor-app-store/"
+IMAGE_URI_DEFAULT="ghcr.io/93million/rapptor:0.1"
+
+APP_STORE_REPO="${RAPPTOR_APP_STORE_REPO:-$APP_STORE_REPO_DEFAULT}"
+DEPLOY_USER=$RAPPTOR_DEPLOY_USER
+DEPLOY_PASSWORD=$RAPPTOR_DEPLOY_PASSWORD
+APP_REPO="${RAPPTOR_APP_REPO:-$APP_REPO_DEFAULT}"
+DOCKER_REGISTRY=$RAPPTOR_DOCKER_REGISTRY
+IMAGE_URI="${RAPPTOR_IMAGE_URI:-$IMAGE_URI_DEFAULT}"
 
 E_MISSING_ARGS=1
 E_REQUIRES_ROOT=2
@@ -35,6 +41,24 @@ check_requirements()
   fi
 }
 
+create_docker_config()
+{
+  mkdir -p $INSTALL_DIR/docker
+
+  if [[ ! -z "$DEPLOY_USER" && ! -z "$DEPLOY_PASSWORD" && ! -z "$DOCKER_REGISTRY" ]]; then
+    echo "{\"auths\": {\"$DOCKER_REGISTRY\": {\"auth\": \"$(echo -n $DEPLOY_USER:$DEPLOY_PASSWORD | base64)\"}}}" \
+      > $INSTALL_DIR/docker/config.json
+  else
+    touch $INSTALL_DIR/docker/config.json
+  fi
+}
+
+create_env_file()
+{
+  echo "RAPPTOR_IMAGE_URI='$IMAGE_URI'" > "$INSTALL_DIR/.env"
+  echo "RAPPTOR_SSL_TEST_CERTS=1" >> "$INSTALL_DIR/.env"
+}
+
 create_instance_data()
 {
   echo -n "Configuring instance data: "
@@ -44,11 +68,25 @@ create_instance_data()
     rapptoros \
     npm --no-update-notifier --silent run cli -- \
     setinfo \
+    -a "$APP_STORE_REPO" \
     -c "$CERTCACHE_CERTBOT_EMAIL" \
+    -i "$IMAGE_URI" \
     -n "Setup Rapptor" \
     -r "$INSTALL_DIR" \
     > /dev/null 2> /dev/null
   echo "done"
+}
+
+disable_systemd_resolve()
+{
+  apt-get-install lsof
+  if lsof -i :53 | grep systemd-resolve > /dev/null; then
+    echo -n "Disabling systemd-resolve: "
+    echo DNSStubListener=no >> /etc/systemd/resolved.conf
+    ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+    systemctl stop systemd-resolved
+    echo "done"
+  fi
 }
 
 error()
@@ -74,7 +112,12 @@ exit_with_usage_msg()
 install_app()
 {
   echo -n "Installing Rapptor: "
-  REPO_URI="https://$DEPLOY_USER:$DEPLOY_PASSWORD@$APP_REPO"
+  if [[ ! -z "$DEPLOY_USER" && ! -z "$DEPLOY_PASSWORD" ]]; then
+    REPO_URI="https://$DEPLOY_USER:$DEPLOY_PASSWORD@$APP_REPO"
+  else
+    REPO_URI="https://$APP_REPO"
+  fi
+
   if [ ! -d "$INSTALL_DIR" ]; then
     mkdir -p "$INSTALL_DIR"
     git clone "$REPO_URI" "$INSTALL_DIR" > /dev/null 2> /dev/null
@@ -85,18 +128,6 @@ install_app()
   git checkout "$GIT_BRANCH" > /dev/null 2> /dev/null
   git reset --hard origin/$GIT_BRANCH > /dev/null 2> /dev/null
   echo "done"
-}
-
-disable_systemd_resolve()
-{
-  apt-get-install lsof
-  if lsof -i :53 | grep systemd-resolve > /dev/null; then
-    echo -n "Disabling systemd-resolve: "
-    echo DNSStubListener=no >> /etc/systemd/resolved.conf
-    ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
-    systemctl stop systemd-resolved
-    echo "done"
-  fi
 }
 
 install_docker()
@@ -183,8 +214,12 @@ parse_args()
 pull_container_images()
 {
   echo -n "Pulling Rapptor container images: "
-  echo "$DEPLOY_PASSWORD" | docker login -u "$DEPLOY_USER" --password-stdin "$DOCKER_REGISTRY" \
-    > /dev/null 2> /dev/null
+
+  if [[ ! -z "$DEPLOY_USER" && ! -z "$DEPLOY_PASSWORD" && ! -z "$DOCKER_REGISTRY" ]]; then
+    echo "$DEPLOY_PASSWORD" | docker login -u "$DEPLOY_USER" --password-stdin "$DOCKER_REGISTRY" \
+      > /dev/null 2> /dev/null
+  fi
+
   docker compose -f "$COMPOSE_FILE" pull > /dev/null 2> /dev/null
   echo "done"
 }
@@ -207,7 +242,8 @@ main()
   install_git
   install_app
   install_cli
-  touch "$INSTALL_DIR/.env"
+  create_env_file
+  create_docker_config
   pull_container_images
   create_instance_data
   install_apps

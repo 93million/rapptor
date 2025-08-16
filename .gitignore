@@ -10,6 +10,7 @@
 /certcache
 /control-panel
 /dev
+/docker
 /instances
 /instances-lib
 /var/token
