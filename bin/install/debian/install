@@ -49,7 +49,7 @@ create_docker_config()
     echo "{\"auths\": {\"$DOCKER_REGISTRY\": {\"auth\": \"$(echo -n $DEPLOY_USER:$DEPLOY_PASSWORD | base64)\"}}}" \
       > $INSTALL_DIR/docker/config.json
   else
-    touch $INSTALL_DIR/docker/config.json
+    echo '{}' > $INSTALL_DIR/docker/config.json
   fi
 }
 
