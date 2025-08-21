@@ -5,6 +5,8 @@ networks:
 volumes:
   rapptor-user-data:
     name: rapptor-user-data
+  rapptor-tls-certs:
+    name: rapptor-tls-certs
 
 services:
   rapptoros:
@@ -28,7 +30,7 @@ services:
       - ./appstorerepo:/appstorerepo:ro
       - ./accounts:/app/accounts:rw
       - ./base:/base:rw
-      - ./certcache/certs:/etc/certcache:ro
+      - rapptor-tls-certs:/etc/certcache:ro
       - ./docker/config.json:/app/docker/config.json:ro
       - ./var/token:/app/var/token:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
@@ -42,9 +44,7 @@ services:
     volumes:
       - ./certcache/cache/:/certcache/cache/:rw
       - ./certcache/catkeys/:/certcache/catkeys/:rw
-      - ./certcache/certs/:/certcache/certs/:rw
-    environment:
-      CERTCACHE_TEST_CERT: '1'
+      - rapptor-tls-certs:/certcache/certs/:rw
     env_file:
       - .env
     ports:
