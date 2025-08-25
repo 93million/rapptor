@@ -1,3 +1,6 @@
+<div align="right"><img src="docs/images/93million_logo.svg" alt="93 Million Ltd. logo" height="36" /></div>
+<div align="center"><img src="docs/images/rapptor-logo-3.svg" alt="Rapptor logo" height="270" /></div><br />
+
 # RapptorVPN
 
 ## VPN + Remote Apps
@@ -27,3 +30,7 @@ read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking accept-new" root
 8. When prompted for your password, enter the root password you chose on step 2
 9. Follow the link that is outputted when the command completes
 10. Choose a domain and create a username and password that you will use to log into Rapptor. If you are not presented with a form to set up the domain and username please wait a few seconds and refresh. It may take 60 seconds before they are available
+
+*Copyright 93 Million. All rights reserved*
+
+<div align="center"><img src="docs/images/93million_logo.svg" alt="93 Million Ltd. logo" height="60" /></div>
