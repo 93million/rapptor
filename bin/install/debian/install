@@ -56,7 +56,6 @@ create_docker_config()
 create_env_file()
 {
   echo "RAPPTOR_IMAGE_URI='$IMAGE_URI'" > "$INSTALL_DIR/.env"
-  echo "RAPPTOR_SSL_TEST_CERTS=1" >> "$INSTALL_DIR/.env"
 }
 
 create_instance_data()
