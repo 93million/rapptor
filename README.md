@@ -15,20 +15,26 @@ RapptorVPN is free software that lets you run a VPN with Remote Apps on generic 
 
 ### Installation
 
-1. Choose a VPS provider from [rapptorvpn.com/providers](https://rapptorvpn.com/providers/)
+1. Choose a VPS (virtual private server) provider from [rapptorvpn.com/providers](https://rapptorvpn.com/providers/)
 2. Make sure the operating system selected is Debian 12 (Debian 11 or later is supported)
 3. If asked to provide a domain name when you purchase your hosting, enter any random value as it is not important at this point
 4. Purchase the hosting
 5. Once the VPS has been created, find the server's IP address. Depending on the provider you purchased it from it may be in the confirmation email that they send you or displayed in their control panel
-6. Open a Command Prompt (on Windows) or Terminal (on Mac and Linux) and run the following command:
+6. Run the following commands (depending on your operating system) to install Rapptor on your VPS:
 
 Windows Command Prompt:
+
+- Press the Windows key + R - Enter the text ‘cmd’ and press enter to open the command line
+- Enter the following command:
 
 ```
 cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking accept-new^" root@!IP! curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/debian/install ^| bash"
 ```
 
 Mac/Linux Terminal:
+
+- Open the ‘Terminal’ app
+- Enter the following command:
 
 ```
 read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking accept-new" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/debian/install | bash"
