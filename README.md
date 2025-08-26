@@ -11,7 +11,7 @@ RapptorVPN is free software that lets you run a VPN with Remote Apps on generic 
 
 - VPS instance running Debian 11 or later
 - 1GB RAM
-- 15 GB Storage
+- 15 GB Storage (about 5GB storage space is required for Rapptor + Debian)
 
 ### Installation
 
