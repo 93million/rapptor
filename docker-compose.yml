@@ -11,10 +11,11 @@ volumes:
 services:
   rapptoros:
     container_name: service.93million.rapptor
-    image: ${RAPPTOR_IMAGE_URI}
+    image: ${RAPPTOR_CUSTOM_IMAGE_URI:-ghcr.io/93million/rapptor:0.1}
     restart: always
     environment:
       NODE_ENV: production
+      RAPPTOR_APP_STORE_REPO: ${RAPPTOR_CUSTOM_APP_STORE_REPO:-https://github.com/93million/rapptor-app-store/}
     env_file:
       - .env
     ports:

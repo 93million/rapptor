@@ -11,12 +11,13 @@ volumes:
 services:
   rapptoros:
     container_name: service.93million.rapptor
-    image: ${RAPPTOR_IMAGE_URI}
+    image: ${RAPPTOR_CUSTOM_IMAGE_URI:-ghcr.io/93million/rapptor:0.1-dev}
     restart: always
     environment:
       NODE_ENV: development
       NODE_TLS_REJECT_UNAUTHORIZED: '0'
       RAPPTOR_NS_SERVICE_URL: 'https://host.docker.internal:3453'
+      RAPPTOR_APP_STORE_REPO: ${RAPPTOR_CUSTOM_APP_STORE_REPO:-https://github.com/93million/rapptor-app-store/}
       RAPPTOR_SETUP_DOMAIN: '1234.setup.rapptor.loc'
     env_file:
       - .env

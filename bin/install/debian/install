@@ -4,15 +4,13 @@ set -e
 
 APP_REPO_DEFAULT="github.com/93million/rapptor"
 CERTCACHE_CERTBOT_EMAIL="certbot@93m.org"
-APP_STORE_REPO_DEFAULT="https://github.com/93million/rapptor-app-store/"
-IMAGE_URI_DEFAULT="ghcr.io/93million/rapptor:0.1"
 
-APP_STORE_REPO="${RAPPTOR_APP_STORE_REPO:-$APP_STORE_REPO_DEFAULT}"
+CUSTOM_APP_STORE_REPO="${RAPPTOR_CUSTOM_CUSTOM_APP_STORE_REPO}"
 DEPLOY_USER=$RAPPTOR_DEPLOY_USER
 DEPLOY_PASSWORD=$RAPPTOR_DEPLOY_PASSWORD
 APP_REPO="${RAPPTOR_APP_REPO:-$APP_REPO_DEFAULT}"
 DOCKER_REGISTRY=$RAPPTOR_DOCKER_REGISTRY
-IMAGE_URI="${RAPPTOR_IMAGE_URI:-$IMAGE_URI_DEFAULT}"
+CUSTOM_IMAGE_URI="${RAPPTOR_CUSTOM_IMAGE_URI}"
 
 E_MISSING_ARGS=1
 E_REQUIRES_ROOT=2
@@ -55,11 +53,13 @@ create_docker_config()
 
 create_env_file()
 {
-  echo "RAPPTOR_IMAGE_URI='$IMAGE_URI'" > "$INSTALL_DIR/.env"
+  echo "RAPPTOR_CUSTOM_IMAGE_URI='$CUSTOM_IMAGE_URI='" > "$INSTALL_DIR/.env"
+  echo "CERTCACHE_TEST_CERT='$CERTCACHE_TEST_CERT'" >> "$INSTALL_DIR/.env"
 }
 
 create_instance_data()
 {
+  if [[ $ ]]
   echo -n "Configuring instance data: "
   docker compose -f "$COMPOSE_FILE" run \
     -T \
@@ -67,9 +67,9 @@ create_instance_data()
     rapptoros \
     npm --no-update-notifier --silent run cli -- \
     setinfo \
-    -a "$APP_STORE_REPO" \
+    -a "$CUSTOM_APP_STORE_REPO" \
     -c "$CERTCACHE_CERTBOT_EMAIL" \
-    -i "$IMAGE_URI" \
+    -i "$CUSTOM_IMAGE_URI" \
     -n "Setup Rapptor" \
     -r "$INSTALL_DIR" \
     > /dev/null 2> /dev/null
