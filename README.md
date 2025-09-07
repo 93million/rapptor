@@ -1,5 +1,15 @@
-<div align="right"><img src="docs/images/93million_logo.svg" alt="93 Million Ltd. logo" height="36" /></div>
-<div align="center"><img src="docs/images/rapptor-logo-3.svg" alt="Rapptor logo" height="270" /></div><br />
+<div align="right">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/93million_logo-dark.svg" height="36" />
+    <img src="docs/images/93million_logo-light.svg" alt="93 Million Ltd. logo" height="36" />
+  </picture>
+</div>
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/rapptor-logo-3-dark.svg" height="270" />
+    <img src="docs/images/rapptor-logo-3-light.svg" alt="Rapptor logo" height="270" />
+  </picture>
+</div><br />
 
 # RapptorVPN
 
@@ -72,4 +82,10 @@ rapptor setuplink
 
 *Copyright 93 Million. All rights reserved*
 
-<br /><div align="center"><img src="docs/images/93million_logo.svg" alt="93 Million Ltd. logo" height="48" /></div>
+<br />
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/93million_logo-dark.svg" height="48" />
+    <img src="docs/images/93million_logo-light.svg" alt="93 Million Ltd. logo" height="48" />
+  </picture>
+</p>
