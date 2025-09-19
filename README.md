@@ -74,11 +74,38 @@ VPN functionality is included through the app 'WireGuard Easy VPN' which is inst
 
 ### Reset password
 
-If you forgot your password you can set things up again by SSHing into your server using your credentials and running the following command to recreate a setup link so you can reset your password:
+If you forgot your Rapptor password you can set Rapptor up again by running the following command and following the setup link:
+
+Windows Command Prompt:
 
 ```
-rapptor setuplink
+cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor setuplink"
 ```
+
+Mac/Linux Terminal:
+
+
+```
+read -p "Enter server IP: " IP && ssh root@$IP "rapptor setuplink"
+```
+
+### Find Rapptor URL
+
+If you forgot the domain you chose to access Rapptor you can find it by running the following command:
+
+Windows Command Prompt:
+
+```
+cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor geturl"
+```
+
+Mac/Linux Terminal:
+
+
+```
+read -p "Enter server IP: " IP && ssh root@$IP "rapptor geturl"
+```
+
 
 *Copyright 93 Million. All rights reserved*
 

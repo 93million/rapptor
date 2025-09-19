@@ -241,6 +241,7 @@ main()
 {
   parse_args "$@"
   check_requirements
+  echo "Installing Rapptor"
   apt-get update > /dev/null
   disable_systemd_resolve
   install_docker
