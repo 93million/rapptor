@@ -40,11 +40,12 @@ services:
       com.93million.containerType: system
   certcache:
     container_name: certcache
-    image: ghcr.io/93million/certcache:0.6.0
+    image: ghcr.io/93million/certcache:1.0.0
     restart: always
     volumes:
       - ./certcache/cache/:/certcache/cache/:rw
       - ./certcache/catkeys/:/certcache/catkeys/:rw
+      - ./certcache/conf/:/certcache/conf/:ro
       - rapptor-tls-certs:/certcache/certs/:rw
     env_file:
       - .env

@@ -1,0 +1,9 @@
+{
+  "extensions": {
+    "certbot": {
+      "server": "https://acme.zerossl.com/v2/DV90",
+      "eabKid": "k0vmbZN2D2bZqszZ41Y_KQ",
+      "eabHmacKey": "6PNtlanjR5UJGXGwDdGrLFAJE3vHU2tk-m6l1Swhac5v3v9fTaIYJBuzZ0vwmdZfmK7zFOFhp0cm_ZEf29wB_g"
+    }
+  }
+}

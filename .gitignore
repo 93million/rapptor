@@ -7,7 +7,6 @@
 /auth-lib
 /base
 /bin/generate-dev-certs/ca
-/certcache
 /control-panel
 /dev
 /docker
