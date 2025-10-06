@@ -116,7 +116,7 @@ exit_with_usage_msg()
 
 install_app()
 {
-  echo -n "Installing Rapptor: "
+  echo -n "Pulling Rapptor repository: "
   if [[ ! -z "$DEPLOY_USER" && ! -z "$DEPLOY_PASSWORD" ]]; then
     REPO_URI="https://$DEPLOY_USER:$DEPLOY_PASSWORD@$APP_REPO"
   else
@@ -218,7 +218,7 @@ parse_args()
 
 pull_container_images()
 {
-  echo -n "Pulling Rapptor container images: "
+  echo -n "Pulling Rapptor images: "
 
   if [[ ! -z "$DEPLOY_USER" && ! -z "$DEPLOY_PASSWORD" && ! -z "$DOCKER_REGISTRY" ]]; then
     echo "$DEPLOY_PASSWORD" | docker login -u "$DEPLOY_USER" --password-stdin "$DOCKER_REGISTRY" \
