@@ -3,11 +3,11 @@
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/93million_logo-dark.svg" height="36" />
     <img src="docs/images/93million_logo-light.svg" alt="93 Million Ltd. logo" height="36" />
   </picture>
-</div>
+</div><br />
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/rapptor-logo-3-dark.svg" height="270" />
-    <img src="docs/images/rapptor-logo-3-light.svg" alt="Rapptor logo" height="270" />
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/rapptor-logo-3-dark.svg" height="220" />
+    <img src="docs/images/rapptor-logo-3-light.svg" alt="Rapptor logo" height="220" />
   </picture>
 </div><br />
 
