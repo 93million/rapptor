@@ -3,13 +3,6 @@
 /accounts
 /apps
 /appstore
-/appstorerepo
-/auth-lib
 /base
-/bin/generate-dev-certs/ca
-/control-panel
-/dev
 /docker
-/instances
-/instances-lib
 /var/token

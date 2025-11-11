@@ -28,7 +28,6 @@ services:
       - ./.env:/app/.env:rw
       - ./apps:/app/apps:rw
       - ./appstore:/app/appstore:rw
-      - ./appstorerepo:/appstorerepo:ro
       - ./accounts:/app/accounts:rw
       - ./base:/base:rw
       - rapptor-tls-certs:/etc/certcache:ro
