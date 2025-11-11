@@ -4,6 +4,7 @@ set -e
 
 APP_REPO_DEFAULT="github.com/93million/rapptor"
 CERTCACHE_CERTBOT_EMAIL="certbot@93m.org"
+GIT_BRANCH_DEFAULT="master"
 
 CUSTOM_APP_STORE_REPO="${RAPPTOR_CUSTOM_CUSTOM_APP_STORE_REPO}"
 DEPLOY_USER=$RAPPTOR_DEPLOY_USER
@@ -12,6 +13,7 @@ APP_REPO="${RAPPTOR_APP_REPO:-$APP_REPO_DEFAULT}"
 DOCKER_REGISTRY=$RAPPTOR_DOCKER_REGISTRY
 CUSTOM_IMAGE_URI="${RAPPTOR_CUSTOM_IMAGE_URI}"
 TEST_CERT="${RAPPTOR_TEST_CERT}"
+GIT_BRANCH="${RAPPTOR_GIT_BRANCH:-$GIT_BRANCH_DEFAULT}"
 
 E_MISSING_ARGS=1
 E_REQUIRES_ROOT=2
@@ -202,20 +204,6 @@ output_setup_link()
     echo "================================================================================"
 }
 
-parse_args()
-{
-  local OPTIND OPTARG flag
-  while getopts "b:" flag; do
-    case "$flag" in
-      b) GIT_BRANCH=$OPTARG;;
-    esac
-  done
-
-  if [ -z "$GIT_BRANCH" ]; then
-    GIT_BRANCH="master"
-  fi
-}
-
 pull_container_images()
 {
   echo -n "Pulling Rapptor images: "
@@ -239,7 +227,6 @@ start_app()
 
 main()
 {
-  parse_args "$@"
   check_requirements
   echo "Installing Rapptor"
   apt-get update > /dev/null
