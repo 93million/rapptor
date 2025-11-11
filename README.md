@@ -106,6 +106,40 @@ Mac/Linux Terminal:
 read -p "Enter server IP: " IP && ssh root@$IP "rapptor geturl"
 ```
 
+### Restart Rapptor
+
+You can restart Rapptor by running the following command:
+
+Windows Command Prompt:
+
+```
+cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor restart"
+```
+
+Mac/Linux Terminal:
+
+
+```
+read -p "Enter server IP: " IP && ssh root@$IP "rapptor restart"
+```
+
+### Reboot server
+
+You can restart your server by running the following command:
+
+Windows Command Prompt:
+
+```
+cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! reboot"
+```
+
+Mac/Linux Terminal:
+
+
+```
+read -p "Enter server IP: " IP && ssh root@$IP reboot
+```
+
 
 *Copyright 93 Million. All rights reserved*
 
