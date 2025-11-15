@@ -30,11 +30,12 @@ services:
       - ./appstore:/app/appstore:rw
       - ./accounts:/app/accounts:rw
       - ./base:/base:rw
-      - rapptor-tls-certs:/etc/certcache:ro
       - ./docker/config.json:/app/docker/config.json:ro
       - ./var/token:/app/var/token:rw
       - ./var/data:/app/var/data:rw
+      - /run/initctl:/run/initctl:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw
+      - rapptor-tls-certs:/etc/certcache:ro
       - rapptor-user-data:/files:rw
     labels:
       com.93million.containerType: system
