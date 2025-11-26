@@ -51,7 +51,7 @@ Windows Command Prompt:
 - Enter the following command:
 
 ```
-cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking accept-new^" root@!IP! curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/debian/install ^| bash"
+cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking off^" root@!IP! curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/debian/install ^| bash"
 ```
 
 Mac/Linux Terminal:
@@ -60,7 +60,7 @@ Mac/Linux Terminal:
 - Enter the following command:
 
 ```
-read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking accept-new" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/debian/install | bash"
+read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/debian/install | bash"
 ```
 
 7. When prompted, enter the server's IP address (from the confirmation email after purchasing, or the hosting service control panel)
