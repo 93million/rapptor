@@ -15,20 +15,35 @@
 
 ## VPN + Remote Apps
 
-Rapptor is a platform that provides a VPN service + apps. It can be installed through a single command onto DMCA ignored virtual private servers (VPS) in offshore locations
+**Rapptor is a VPN service that runs on DMCA-ignored hosting providers in Europe.**
 
-It comes with the following apps:
+Purchase hosting then install Rapptor onto your server with a single command.
 
-- WireGuard Easy - a WireGuard based VPN server
-- Transmission - a BitTorrent server
-- Plex - a video streaming server
-- Jellyfin - an open source video streaming server
-- OwnCloud - a Dropbox alternative
-- Nextcloud - an open source Dropbox alternative
+As well as a VPN, Rapptor includes apps to download direct to your server, and to stream media to your TV, laptop, tablet or phone.
+
+Rapptor works with Windows, MacOS, Linux, iOS and Android.
+
+### Apps
+
+Rapptor comes with the following apps that run on the server:
+
+- **WireGuard Easy** - a WireGuard based VPN server
+- **Transmission** - a BitTorrent server
+- **Plex** - a video streaming server
+- **Jellyfin** - an open source video streaming server
+- **OwnCloud** - a Dropbox alternative
+- **Nextcloud** - an open source Dropbox alternative
 
 Apps are configured to work together without requiring additional configuration
 
-It is tested against several VPS providers who offer DMCA ignored services in countries such as Switzerland, Netherlands and Moldova
+Rapptor is tested against several VPS providers who offer DMCA ignored services in countries such as Switzerland, Netherlands and Moldova
+
+### Benefits:
+- **Purchase hosting - not a VPN:** Get a VPN without purchasing a VPN.
+- **Confidence there are no logs:** Log into your hosting instance and see for yourself. Or have confidence knowing that others have.
+- **Wipe your server clean:** Delete everything from the command line or from your hosting provider control panel.
+- **Mobility between hosting providers:** Found a better hosting service? Take Rapptor with you. Rapptor can run on any server that supports Debian 11+
+- **Server oversight:** Inspect processes and network traffic to see what is happening on your server using standard Linux tools (ps, nmap, netstat, tcpdump, etc.)
 
 ### Requirements:
 
@@ -38,7 +53,7 @@ It is tested against several VPS providers who offer DMCA ignored services in co
 
 ### Installation
 
-1. Choose a VPS (virtual private server) provider from [rapptorvpn.com/get](https://rapptorvpn.com/get/)
+1. Choose a VPS (virtual private server) provider from <a href="https://rapptorvpn.com/get/" target="_blank">rapptorvpn.com/get</a>
 2. Make sure the operating system selected is Debian 12 (Debian 11 or later is supported)
 3. If asked to provide a domain name when you purchase your hosting, enter any random value as it is not important at this point
 4. Purchase the hosting (payment via crypto is accepted in most cases)
