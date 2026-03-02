@@ -17,9 +17,11 @@ GIT_BRANCH="${RAPPTOR_GIT_BRANCH:-$GIT_BRANCH_DEFAULT}"
 
 E_MISSING_ARGS=1
 E_REQUIRES_ROOT=2
+E_UNSUPPORTED_PLATFORM=3
 INSTALL_DIR="/var/docker/rapptor"
 ACCOUNTS_DIR="$INSTALL_DIR/accounts"
 COMPOSE_FILE="$INSTALL_DIR/docker-compose.yml"
+PLATFORM=$(. /etc/os-release && echo "$ID")
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -39,6 +41,10 @@ check_requirements()
 {
   if [ $( id -u ) -ne 0 ]; then
     exit_with_usage_msg "Script must be run as root" $E_REQUIRES_ROOT
+  fi
+
+  if [[ $PLATFORM != "debian" && $PLATFORM != "ubuntu" ]]; then
+    exit_with_usage_msg "Platform must be Debian or Ubuntu" $E_UNSUPPORTED_PLATFORM
   fi
 }
 
@@ -141,14 +147,15 @@ install_docker()
 {
   if ! command -v docker > /dev/null; then
     echo -n "Installing Docker: "
+    apt-get update > /dev/null
     apt-get-install ca-certificates curl
     install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+    if [[ $PLATFORM == "debian" ]]; then
+      install_docker_debian
+    elif [[ $PLATFORM == "ubuntu" ]]; then
+      install_docker_ubuntu
+    fi
     chmod a+r /etc/apt/keyrings/docker.asc
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      tee /etc/apt/sources.list.d/docker.list > /dev/null
     apt-get update > /dev/null
     apt-get-install \
       docker-ce \
@@ -158,6 +165,28 @@ install_docker()
       docker-compose-plugin
     echo "done"
   fi
+}
+
+install_docker_debian()
+{
+
+  curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.sources > /dev/null
+}
+
+install_docker_ubuntu()
+{
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  tee /etc/apt/sources.list.d/docker.sources > /dev/null <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
 }
 
 install_apps() {
