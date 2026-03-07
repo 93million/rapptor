@@ -155,6 +155,29 @@ Mac/Linux Terminal:
 read -p "Enter server IP: " IP && ssh root@$IP reboot
 ```
 
+### Wiping your server
+
+You can wipe your server by running the following command:
+
+Windows Command Prompt:
+
+```
+cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! /var/docker/rapptor/bin/wipe"
+```
+
+Mac/Linux Terminal:
+
+
+```
+read -p "Enter server IP: " IP && ssh root@$IP "/var/docker/rapptor/bin/wipe"
+```
+
+For more information about wiping, see [docs/Wiping Your Server.md](docs/Wiping%20Your%20Server.md)
+
+### Streaming with Jellyfin
+
+For information about using Jellyfin on your TV see [docs/Jellyfin.md](docs/Jellyfin.md)
+
 
 *Copyright 93 Million. All rights reserved*
 
