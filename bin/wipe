@@ -1,0 +1,22 @@
+#! /usr/bin/env sh
+
+set -e
+
+# Shut down Rapptor and remove volumes
+docker compose -f /var/docker/rapptor/docker-compose.yml down -v 2> /dev/null
+
+sleep 4
+
+# Remove anonymous volumes, containers, networks, and images not referenced from running containers
+docker system prune -af --volumes > /dev/null
+
+# Remove named volumes that are not attached to running container
+docker volume prune -af > /dev/null
+
+# Remove Rapptor codebase
+rm -rf /var/docker/rapptor/
+
+
+echo "########################"
+echo " Rapptor has been wiped "
+echo "########################"
