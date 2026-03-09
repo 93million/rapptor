@@ -15,7 +15,7 @@
 
 ## VPN + Remote Apps
 
-**Rapptor is a VPN service that runs on DMCA-ignored hosting providers in Europe.**
+**Rapptor is a VPN service that runs on low-cost DMCA-ignored hosting providers in Europe.**
 
 Purchase hosting then install Rapptor onto your server with a single command.
 
