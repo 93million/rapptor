@@ -220,7 +220,7 @@ install_cli()
 output_setup_link()
 {
     echo "Generating setup link:"
-    SETUP_LINK="$(docker compose -f "$COMPOSE_FILE" run -T --rm rapptoros npm run --no-update-notifier --silent cli -- setuplink)"
+    SETUP_LINK="$(docker compose -f "$COMPOSE_FILE" run -T --rm rapptoros npm run --no-update-notifier --silent cli -- setuplink 2> /dev/null)"
     cat "$INSTALL_DIR/bin/install/logo.txt"
     echo "================================================================================"
     echo "                              RAPPTOR IS INSTALLED!"
