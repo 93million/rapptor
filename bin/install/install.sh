@@ -21,7 +21,7 @@ E_UNSUPPORTED_PLATFORM=3
 INSTALL_DIR="/var/docker/rapptor"
 ACCOUNTS_DIR="$INSTALL_DIR/accounts"
 COMPOSE_FILE="$INSTALL_DIR/docker-compose.yml"
-PLATFORM=$(. /etc/os-release && echo "$ID")
+PLATFORM=$(test -f /etc/os-release && . /etc/os-release && echo "$ID" || true)
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -39,12 +39,12 @@ apt-get-install ()
 
 check_requirements()
 {
-  if [ $( id -u ) -ne 0 ]; then
-    exit_with_usage_msg "Script must be run as root" $E_REQUIRES_ROOT
+  if [[ $PLATFORM != "debian" && $PLATFORM != "ubuntu" ]]; then
+    exit_with_code "Platform must be Debian or Ubuntu" $E_UNSUPPORTED_PLATFORM
   fi
 
-  if [[ $PLATFORM != "debian" && $PLATFORM != "ubuntu" ]]; then
-    exit_with_usage_msg "Platform must be Debian or Ubuntu" $E_UNSUPPORTED_PLATFORM
+  if [ $( id -u ) -ne 0 ]; then
+    exit_with_code "Script must be run as root" $E_REQUIRES_ROOT
   fi
 }
 
@@ -115,10 +115,9 @@ error()
   exit "${code}"
 }
 
-exit_with_usage_msg()
+exit_with_code()
 {
-  echo $1
-  echo "$(basename $0) [-b git-branch]"
+  echo $1 >&2
   exit $2
 }
 
