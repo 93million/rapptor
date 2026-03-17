@@ -39,6 +39,7 @@ Apps are configured to work together without requiring additional configuration
 Rapptor is tested against several VPS providers who offer DMCA ignored services in countries such as Switzerland, Netherlands and Moldova
 
 ### Benefits:
+
 - **Purchase hosting - not a VPN:** Get a VPN without purchasing a VPN.
 - **Confidence there are no logs:** Log into your hosting instance and see for yourself. Or have confidence knowing that others have.
 - **Wipe your server clean:** Delete everything from the command line or from your hosting provider control panel.
@@ -53,16 +54,20 @@ Rapptor is tested against several VPS providers who offer DMCA ignored services 
 
 ### Installation
 
-1. Choose a VPS (virtual private server) provider from <a href="https://rapptorvpn.com/get/" target="_blank">rapptorvpn.com/get</a>
-2. Make sure the operating system selected is Debian 12 (Debian 11 or later is supported)
-3. If asked to provide a domain name when you purchase your hosting, enter any random value as it is not important at this point
-4. Purchase the hosting (payment via crypto is accepted in most cases)
-5. Once the VPS has been created, find the server's IP address. Depending on the provider you purchased it from it may be in the confirmation email that they send you or displayed in their control panel
-6. Run the following command (depending on your operating system) to install Rapptor on your VPS:
+1. Obtain suitable (DMCA ignored/offshore VPS) hosting with the following minimum specs:
+
+  - Debian 11 or later
+  - 1.5 GB ram
+  - 10 GB storage (20GB+ recommended to install apps)
+
+If you require hosting see our list of <a href="https://rapptorvpn.com/get/" target="_blank">DMCA-ignored hosting providers</a>.
+
+2. Locate your server's IP address and root password (it may be in your hosting setup email - or in your hosting control panel)
+3. Run this command to install Rapptor on your hosting:
 
 Windows Command Prompt:
 
-- Press the Windows key + R - Enter the text ‘cmd’ and press enter to open the command line
+- Press the Windows key + R then enter the text `cmd` and press enter to open the command line
 - Enter the following command:
 
 ```
@@ -78,12 +83,7 @@ Mac/Linux Terminal:
 read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash"
 ```
 
-7. When prompted, enter the server's IP address (from the confirmation email after purchasing, or the hosting service control panel)
-8. When prompted, enter the root password (from the confirmation email or control panel)
-9. Follow the link that is outputted when the command completes
-10. Choose a domain and create a username and password that you will use to log into Rapptor. If you are not presented with a form to set up the domain and username please wait a few seconds and refresh. It may take 60 seconds before it is available
-
-Follow the link to log in using the user and password you created
+4. After the installation script has completed a URL is displayed in the Terminal. Open the URL in a browser to choose a Rapptor domain and finish setting up Rapptor (it may take 60 seconds before it is working).
 
 VPN functionality is included through the app 'WireGuard Easy VPN' which is installed by default. Use the App Store to install other apps that you may wish to use
 
@@ -98,7 +98,6 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor setuplink"
 ```
 
 Mac/Linux Terminal:
-
 
 ```
 read -p "Enter server IP: " IP && ssh root@$IP "rapptor setuplink"
@@ -116,7 +115,6 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor geturl"
 
 Mac/Linux Terminal:
 
-
 ```
 read -p "Enter server IP: " IP && ssh root@$IP "rapptor geturl"
 ```
@@ -132,7 +130,6 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor restart"
 ```
 
 Mac/Linux Terminal:
-
 
 ```
 read -p "Enter server IP: " IP && ssh root@$IP "rapptor restart"
@@ -150,7 +147,6 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! reboot"
 
 Mac/Linux Terminal:
 
-
 ```
 read -p "Enter server IP: " IP && ssh root@$IP reboot
 ```
@@ -167,7 +163,6 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! /var/docker/rapptor/bin
 
 Mac/Linux Terminal:
 
-
 ```
 read -p "Enter server IP: " IP && ssh root@$IP "/var/docker/rapptor/bin/wipe"
 ```
@@ -177,7 +172,6 @@ For more information about wiping, see [docs/Wiping Your Server.md](docs/Wiping%
 ### Streaming with Jellyfin
 
 For information about using Jellyfin on your TV see [docs/Jellyfin.md](docs/Jellyfin.md)
-
 
 *Copyright 93 Million. All rights reserved*
 
