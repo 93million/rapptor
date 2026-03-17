@@ -40,11 +40,13 @@ Rapptor is tested against several VPS providers who offer DMCA ignored services 
 
 ### Benefits:
 
-- **Purchase hosting - not a VPN:** Get a VPN without purchasing a VPN.
-- **Confidence there are no logs:** Log into your hosting instance and see for yourself. Or have confidence knowing that others have.
-- **Wipe your server clean:** Delete everything from the command line or from your hosting provider control panel.
-- **Mobility between hosting providers:** Found a better hosting service? Take Rapptor with you. Rapptor can run on any server that supports Debian 11+
-- **Server oversight:** Inspect processes and network traffic to see what is happening on your server using standard Linux tools (ps, nmap, netstat, tcpdump, etc.)
+
+- **Purchase hosting - not a VPN:** VPNs are coming under increased scrutiny. Get a VPN without buying a VPN
+- **Confidence there are no logs:** Being able to SSH into your server brings oversight that normal VPNs do not offer
+- **Wipe your server clean:** Being able to delete everything from the command line or from your hosting provider control panel brings an extra level of security
+- **Mobility between hosting providers:** If you find better hosting you can take Rapptor with you
+- **Convenience domain:** Use your Rapptor domain (with SSL) to make things like connecting to Jellyfin easy and secure
+- **Zero-conf apps:** Apps are designed to work together without the need for complex configuration
 
 ### Requirements:
 
