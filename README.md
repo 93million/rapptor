@@ -48,29 +48,23 @@ Rapptor is tested against several VPS providers who offer DMCA ignored services 
 - **Convenience domain:** Use your Rapptor domain (with SSL) to make things like connecting to Jellyfin easy and secure
 - **Zero-conf apps:** Apps are designed to work together without the need for complex configuration
 
-### Requirements:
-
-- VPS instance running Debian 11 or later
-- 1GB RAM
-- 15 GB Storage (about 5GB storage space is required for Rapptor + Debian)
-
 ### Installation
 
 1. Obtain suitable (DMCA ignored/offshore VPS) hosting with the following minimum specs:
 
-  - Debian 11 or later
-  - 1.5 GB ram
-  - 10 GB storage (20GB+ recommended to install apps)
+    - Debian 11 or later
+    - 1.5 GB ram
+    - 10 GB storage (20GB+ recommended to install apps)
 
-If you require hosting see our list of <a href="https://rapptorvpn.com/get/" target="_blank">DMCA-ignored hosting providers</a>.
+  If you require hosting see our list of [DMCA-ignored hosting providers](https://rapptorvpn.com/get/).
 
-2. Locate your server's IP address and root password (it may be in your hosting setup email - or in your hosting control panel)
+2. Locate your server's **IP address** and **root password** (it may be in your hosting setup email - or in your hosting control panel)
 3. Run this command to install Rapptor on your hosting:
 
 Windows Command Prompt:
 
-- Press the Windows key + R then enter the text `cmd` and press enter to open the command line
-- Enter the following command:
+  - Press the Windows key + R then enter the text `cmd` and press enter to open the command line
+  - Enter the following command:
 
 ```
 cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking off^" root@!IP! curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh ^| bash"
@@ -78,8 +72,8 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking off^" 
 
 Mac/Linux Terminal:
 
-- Open the ‘Terminal’ app
-- Enter the following command:
+  - Open the ‘Terminal’ app
+  - Enter the following command:
 
 ```
 read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash"
