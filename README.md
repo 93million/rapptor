@@ -76,7 +76,7 @@ Mac/Linux Terminal:
   - Enter the following command:
 
 ```
-read -p "Enter server IP: " IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash"
+echo -n "Enter server IP: " && read IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash"
 ```
 
 4. After the installation script has completed a URL is displayed in the Terminal. Open the URL in a browser to choose a Rapptor domain and finish setting up Rapptor (it may take 60 seconds before it is working).
@@ -96,7 +96,7 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor setuplink"
 Mac/Linux Terminal:
 
 ```
-read -p "Enter server IP: " IP && ssh root@$IP "rapptor setuplink"
+echo -n "Enter server IP: " && read IP && ssh root@$IP "rapptor setuplink"
 ```
 
 ### Find Rapptor URL
@@ -112,7 +112,7 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor geturl"
 Mac/Linux Terminal:
 
 ```
-read -p "Enter server IP: " IP && ssh root@$IP "rapptor geturl"
+echo -n "Enter server IP: " && read IP && ssh root@$IP "rapptor geturl"
 ```
 
 ### Restart Rapptor
@@ -128,7 +128,7 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor restart"
 Mac/Linux Terminal:
 
 ```
-read -p "Enter server IP: " IP && ssh root@$IP "rapptor restart"
+echo -n "Enter server IP: " && read IP && ssh root@$IP "rapptor restart"
 ```
 
 ### Reboot server
@@ -144,7 +144,7 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! reboot"
 Mac/Linux Terminal:
 
 ```
-read -p "Enter server IP: " IP && ssh root@$IP reboot
+echo -n "Enter server IP: " && read IP && ssh root@$IP reboot
 ```
 
 ### Wiping your server
@@ -160,7 +160,7 @@ cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! /var/docker/rapptor/bin
 Mac/Linux Terminal:
 
 ```
-read -p "Enter server IP: " IP && ssh root@$IP "/var/docker/rapptor/bin/wipe"
+echo -n "Enter server IP: " && read IP && ssh root@$IP "/var/docker/rapptor/bin/wipe"
 ```
 
 For more information about wiping, see [docs/Wiping Your Server.md](docs/Wiping%20Your%20Server.md)

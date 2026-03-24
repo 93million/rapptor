@@ -30,7 +30,7 @@ Mac/Linux Terminal:
 - Enter the following command:
 
 ```
-read -p "Enter server IP: " IP && ssh root@$IP "/var/docker/rapptor/bin/wipe"
+echo -n "Enter server IP: " && read IP && ssh root@$IP "/var/docker/rapptor/bin/wipe"
 ```
 
 Rapptor can be reinstalled by running the [install command](../README.md#installation).
