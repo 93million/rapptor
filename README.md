@@ -79,9 +79,13 @@ Mac/Linux Terminal:
 echo -n "Enter server IP: " && read IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash"
 ```
 
-4. After the installation script has completed a URL is displayed in the Terminal. Open the URL in a browser to choose a Rapptor domain and finish setting up Rapptor (it may take 60 seconds before it is working).
+4. After the installation script has completed a URL is displayed in the Terminal. Open the URL in a browser to choose a Rapptor domain and finish setting up Rapptor (it may take 60 seconds before it is working)
 
 VPN functionality is included through the app 'WireGuard Easy VPN' which is installed by default. Use the App Store to install other apps that you may wish to use
+
+### Setting up WireGuard VPN
+
+VPN functionality is implemented through WireGuard. You can set up clients in Rapptor through the `WireGuard Easy VPN` app. Clients for many platforms can be found at [wireguard.com/install](https://www.wireguard.com/install/). See [docs/WireGuard.md](docs/WireGuard.md) for more info
 
 ### Reset password
 
