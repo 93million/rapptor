@@ -56,32 +56,40 @@ Rapptor is tested against several VPS providers who offer DMCA ignored services 
     - 1.5 GB ram
     - 10 GB storage (20GB+ recommended to install apps)
 
-  If you require hosting see our list of [DMCA-ignored hosting providers](https://rapptorvpn.com/get/).
+    If you require hosting see our list of [DMCA-ignored hosting providers](https://rapptorvpn.com/hosting).
 
 2. Locate your server's **IP address** and **root password** (it may be in your hosting setup email - or in your hosting control panel)
 3. Run this command to install Rapptor on your hosting:
 
-Windows Command Prompt:
+  Windows Command Prompt:
 
   - Press the Windows key + R then enter the text `cmd` and press enter to open the command line
   - Enter the following command:
 
-```
-cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking off^" root@!IP! curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh ^| bash"
-```
+  ```sh
+  cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking off^" root@!IP! curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh ^| bash"
+  ```
 
-Mac/Linux Terminal:
+  Mac/Linux Terminal:
 
   - Open the ‘Terminal’ app
   - Enter the following command:
 
-```
-echo -n "Enter server IP: " && read IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash"
-```
+  ```sh
+  echo -n "Enter server IP: " && read IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash"
+  ```
 
 4. After the installation script has completed a URL is displayed in the Terminal. Open the URL in a browser to choose a Rapptor domain and finish setting up Rapptor (it may take 60 seconds before it is working)
 
 VPN functionality is included through the app 'WireGuard Easy VPN' which is installed by default. Use the App Store to install other apps that you may wish to use
+
+#### Can I install without giving my server IP and root login details?
+
+Yes - as long as you are comfortable using the command line. SSH into your server and run this command:
+
+```sh
+curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash
+```
 
 ### Setting up WireGuard VPN
 
@@ -93,13 +101,13 @@ If you forgot your Rapptor password you can set Rapptor up again by running the 
 
 Windows Command Prompt:
 
-```
+```sh
 cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor setuplink"
 ```
 
 Mac/Linux Terminal:
 
-```
+```sh
 echo -n "Enter server IP: " && read IP && ssh root@$IP "rapptor setuplink"
 ```
 
@@ -109,13 +117,13 @@ If you forgot the domain you chose to access Rapptor you can find it by running 
 
 Windows Command Prompt:
 
-```
+```sh
 cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor geturl"
 ```
 
 Mac/Linux Terminal:
 
-```
+```sh
 echo -n "Enter server IP: " && read IP && ssh root@$IP "rapptor geturl"
 ```
 
@@ -125,13 +133,13 @@ You can restart Rapptor by running the following command:
 
 Windows Command Prompt:
 
-```
+```sh
 cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! rapptor restart"
 ```
 
 Mac/Linux Terminal:
 
-```
+```sh
 echo -n "Enter server IP: " && read IP && ssh root@$IP "rapptor restart"
 ```
 
@@ -141,13 +149,13 @@ You can restart your server by running the following command:
 
 Windows Command Prompt:
 
-```
+```sh
 cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! reboot"
 ```
 
 Mac/Linux Terminal:
 
-```
+```sh
 echo -n "Enter server IP: " && read IP && ssh root@$IP reboot
 ```
 
@@ -157,13 +165,13 @@ You can wipe your server by running the following command:
 
 Windows Command Prompt:
 
-```
+```sh
 cmd /V:ON /C "set /p IP=Enter server IP: & ssh root@!IP! /var/docker/rapptor/bin/wipe"
 ```
 
 Mac/Linux Terminal:
 
-```
+```sh
 echo -n "Enter server IP: " && read IP && ssh root@$IP "/var/docker/rapptor/bin/wipe"
 ```
 
@@ -172,6 +180,15 @@ For more information about wiping, see [docs/Wiping Your Server.md](docs/Wiping%
 ### Streaming with Jellyfin
 
 For information about using Jellyfin on your TV see [docs/Jellyfin.md](docs/Jellyfin.md)
+
+### Running NextCloud and OwnCloud for the first time
+
+Before you can log in you will need to set an admin password.
+
+- Open NextCloud/OwnCloud
+- Click the settings icon (shaped like a cog ⚙️) at the top for the screen next to the close icon
+- Enter an admin password and click submit
+- Log in with the username `admin` and the password you just entered
 
 *Copyright 93 Million. All rights reserved*
 
