@@ -179,6 +179,10 @@ For more information about wiping, see [docs/Wiping Your Server.md](docs/Wiping%
 
 ### Streaming with Jellyfin
 
+When connecting to Jellyfin server from a smart TV, tablet, enter the address as follows: `https://<rapptordomain>:8920`. For example if your Rapptor domain is jonny.rapptor.wtf then enter `https://jonny.rapptor.wtf:8920`
+
+Enter the username and password you created when you first launched Jellyfin
+
 For information about using Jellyfin on your TV see [docs/Jellyfin.md](docs/Jellyfin.md)
 
 ### Running NextCloud and OwnCloud for the first time
