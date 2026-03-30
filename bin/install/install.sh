@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-set -e
+set -E
 
 APP_REPO_DEFAULT="github.com/93million/rapptor"
 CERTCACHE_CERTBOT_EMAIL="certbot@93m.org"
@@ -22,16 +22,23 @@ INSTALL_DIR="/var/docker/rapptor"
 ACCOUNTS_DIR="$INSTALL_DIR/accounts"
 COMPOSE_FILE="$INSTALL_DIR/docker-compose.yml"
 PLATFORM=$(test -f /etc/os-release && . /etc/os-release && echo "$ID" || true)
+LOG_FILE="/tmp/rapptor-install.log"
+ERROR_LOG_FILE="/tmp/rapptor-install.error.log"
 
 export DEBIAN_FRONTEND=noninteractive
 
+exec 3<> /dev/stdout
+exec 4<> /dev/stderr
+exec 1> "$LOG_FILE"
+exec 2> "$ERROR_LOG_FILE"
+
 apt-get-install ()
 {
-  if ! apt-get -qqy install $@ > /dev/null; then
-    echo "Another process is blocking apt-get. Waiting for process to complete."
+  if ! apt-get -qqy install $@; then
+    logStart "Another process is blocking apt-get. Waiting for process to complete."
     if ! apt-get -y -o DPkg::Lock::Timeout=600 install $@; then
       E_CODE=$?
-      echo "Unable to install packages. Another process is blocking apt-get. Please wait for it to complete and try to install Rapptor again" 1>&2
+      logStart "Unable to install packages. Another process is blocking apt-get. Please wait for it to complete and try to install Rapptor again"
       exit $E_CODE
     fi
   fi
@@ -73,7 +80,7 @@ create_instance_data()
   else
     TEST_CERT_ARG="false"
   fi
-  echo -n "Configuring instance data: "
+  logStart "Configuring instance data: "
   docker compose -f "$COMPOSE_FILE" run \
     -T \
     --rm \
@@ -85,20 +92,19 @@ create_instance_data()
     -i "$CUSTOM_IMAGE_URI" \
     -n "Setup Rapptor" \
     -r "$INSTALL_DIR" \
-    -t "$TEST_CERT_ARG" \
-    > /dev/null 2> /dev/null
-  echo "done"
+    -t "$TEST_CERT_ARG"
+  logEnd
 }
 
 disable_systemd_resolve()
 {
   apt-get-install lsof
   if lsof -i :53 | grep systemd-resolve > /dev/null; then
-    echo -n "Disabling systemd-resolve: "
+    logStart "Disabling systemd-resolve: "
     echo DNSStubListener=no >> /etc/systemd/resolved.conf
     ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
     systemctl stop systemd-resolved
-    echo "done"
+    logEnd
   fi
 }
 
@@ -107,23 +113,39 @@ error()
   local parent_lineno="$1"
   local message="$2"
   local code="${3:-1}"
+
+  logError
+
   if [[ -n "$message" ]] ; then
-    echo "Error on or near line ${parent_lineno}: ${message}; exiting with status ${code}"
+    logError \
+      "Error on or near line ${parent_lineno}: ${message}; exiting with status ${code}"
   else
-    echo "Error on or near line ${parent_lineno}; exiting with status ${code}"
+    logError \
+      "Error on or near line ${parent_lineno}; exiting with status ${code}"
   fi
+
+  cat "$ERROR_LOG_FILE" >&4
+
+  logError
+  logError
+  logError "Rapptor failed to install"
+  logError "Please file an issue at https://github.com/93million/rapptor/issues and include the output from this script"
+  logError
+
+  remove_logs
+
   exit "${code}"
 }
 
 exit_with_code()
 {
-  echo $1 >&2
+  logError "$1"
   exit $2
 }
 
 install_app()
 {
-  echo -n "Pulling Rapptor repository: "
+  logStart "Pulling Rapptor repository: "
   if [[ ! -z "$DEPLOY_USER" && ! -z "$DEPLOY_PASSWORD" ]]; then
     REPO_URI="https://$DEPLOY_USER:$DEPLOY_PASSWORD@$APP_REPO"
   else
@@ -132,21 +154,21 @@ install_app()
 
   if [ ! -d "$INSTALL_DIR" ]; then
     mkdir -p "$INSTALL_DIR"
-    git clone "$REPO_URI" "$INSTALL_DIR" > /dev/null 2> /dev/null
+    git clone "$REPO_URI" "$INSTALL_DIR"
   fi
   cd "$INSTALL_DIR"
   git remote set-url origin "$REPO_URI"
-  git fetch > /dev/null 2> /dev/null
-  git checkout "$GIT_BRANCH" > /dev/null 2> /dev/null
-  git reset --hard origin/$GIT_BRANCH > /dev/null 2> /dev/null
-  echo "done"
+  git fetch
+  git checkout "$GIT_BRANCH"
+  git reset --hard origin/$GIT_BRANCH
+  logEnd
 }
 
 install_docker()
 {
   if ! command -v docker > /dev/null; then
-    echo -n "Installing Docker: "
-    apt-get update > /dev/null
+    logStart "Installing Docker: "
+    apt-get update
     apt-get-install ca-certificates curl
     install -m 0755 -d /etc/apt/keyrings
     if [[ $PLATFORM == "debian" ]]; then
@@ -155,14 +177,14 @@ install_docker()
       install_docker_ubuntu
     fi
     chmod a+r /etc/apt/keyrings/docker.asc
-    apt-get update > /dev/null
+    apt-get update
     apt-get-install \
       docker-ce \
       docker-ce-cli \
       containerd.io \
       docker-buildx-plugin \
       docker-compose-plugin
-    echo "done"
+    logEnd
   fi
 }
 
@@ -189,24 +211,23 @@ EOF
 }
 
 install_apps() {
-  echo -n "Installing Rapptor base apps: "
+  logStart "Installing Rapptor base apps: "
   docker compose -f "$COMPOSE_FILE" run \
     -T \
     --rm \
     rapptoros \
     npm --no-update-notifier --silent run cli -- \
     install \
-    app.93million.wg-easy \
-    > /dev/null 2> /dev/null
-  echo "done"
+    app.93million.wg-easy
+  logEnd
 }
 
 install_git()
 {
   if ! command -v git > /dev/null; then
-    echo -n "Installing git: "
+    logStart "Installing git: "
     apt-get-install git
-    echo "done"
+    logEnd
   fi
 }
 
@@ -216,48 +237,106 @@ install_cli()
   ln -fs "$INSTALL_DIR/bin/rapptor" "/usr/local/bin/rapptor"
 }
 
+logEnd()
+{
+  log 'done'
+}
+
+logStart()
+{
+  echo -n "$1" >&3
+}
+
+log()
+{
+  echo "$1" >&3
+}
+
+logError()
+{
+  echo "$1" >&4
+}
+
 output_setup_link()
 {
-    echo "Generating setup link:"
-    SETUP_LINK="$(docker compose -f "$COMPOSE_FILE" run -T --rm rapptoros npm run --no-update-notifier --silent cli -- setuplink 2> /dev/null)"
-    cat "$INSTALL_DIR/bin/install/logo.txt"
-    echo "================================================================================"
-    echo "                              RAPPTOR IS INSTALLED!"
-    echo "--------------------------------------------------------------------------------"
-    echo
-    echo "Follow this link to set up your instance (wait 60 seconds for app to start):"
-    echo
-    echo $SETUP_LINK
-    echo
-    echo "================================================================================"
+  log "Generating setup link:"
+  SETUP_LINK="$(
+    docker compose -f "$COMPOSE_FILE" run \
+      -qT \
+      --rm \
+      rapptoros \
+      npm \
+      run \
+      --no-update-notifier \
+      --silent \
+      cli \
+      -- \
+      setuplink
+  )"
+  cat "$INSTALL_DIR/bin/install/logo.txt" >&3
+  log "================================================================================"
+  log "                              RAPPTOR IS INSTALLED!"
+  log "--------------------------------------------------------------------------------"
+  log
+  log "Follow this link to set up your instance (wait 60 seconds for app to start):"
+  log
+  log $SETUP_LINK
+  log
+  log "================================================================================"
 }
 
 pull_container_images()
 {
-  echo -n "Pulling Rapptor images: "
+  logStart "Pulling Rapptor images: "
 
   if [[ ! -z "$DEPLOY_USER" && ! -z "$DEPLOY_PASSWORD" && ! -z "$DOCKER_REGISTRY" ]]; then
-    echo "$DEPLOY_PASSWORD" | docker login -u "$DEPLOY_USER" --password-stdin "$DOCKER_REGISTRY" \
-      > /dev/null 2> /dev/null
+    echo "$DEPLOY_PASSWORD" | docker login -u "$DEPLOY_USER" --password-stdin "$DOCKER_REGISTRY"
   fi
 
-  docker compose -f "$COMPOSE_FILE" pull > /dev/null 2> /dev/null
-  echo "done"
+  docker compose -f "$COMPOSE_FILE" pull
+  logEnd
+}
+
+remove_logs()
+{
+  rm "$LOG_FILE"
+  rm "$ERROR_LOG_FILE"
 }
 
 start_app()
 {
-  echo -n "Starting Rapptor: "
-  docker compose -f "$COMPOSE_FILE" down --remove-orphans > /dev/null 2> /dev/null
-  docker compose -f "$COMPOSE_FILE" up -d  > /dev/null 2> /dev/null
-  echo "done"
+  logStart "Starting Rapptor: "
+  docker compose -f "$COMPOSE_FILE" up --quiet-pull -d 
+  logEnd
+}
+
+stop_app()
+{
+  logStart "Stopping Rapptor if running: "
+  docker compose -f "$COMPOSE_FILE" down --remove-orphans
+  logEnd
+}
+
+sync_certs()
+{
+  logStart "Syncing certs: "
+  docker compose rm -s certcache
+  docker compose -f "$COMPOSE_FILE" \
+    run --remove-orphans \
+    --name certcache-sync \
+    -q \
+    -p "53:53/tcp" \
+    -p "53:53/udp" \
+    certcache \
+    sync
+  logEnd
 }
 
 main()
 {
   check_requirements
-  echo "Installing Rapptor"
-  apt-get update > /dev/null
+  log "Installing Rapptor"
+  apt-get update
   disable_systemd_resolve
   install_docker
   install_git
@@ -268,8 +347,11 @@ main()
   pull_container_images
   create_instance_data
   install_apps
+  stop_app
+  sync_certs
   start_app
   output_setup_link
+  remove_logs
 }
 
 trap 'error ${LINENO}' ERR
