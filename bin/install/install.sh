@@ -279,7 +279,7 @@ output_setup_link()
   log "                              RAPPTOR IS INSTALLED!"
   log "--------------------------------------------------------------------------------"
   log
-  log "Follow this link to set up your instance (wait 60 seconds for app to start):"
+  log "Follow this link to set up your instance (wait 10 seconds for app to start):"
   log
   log $SETUP_LINK
   log
