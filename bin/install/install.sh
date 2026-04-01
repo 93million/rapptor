@@ -324,6 +324,7 @@ sync_certs()
   docker compose rm -s certcache
   docker compose -f "$COMPOSE_FILE" \
     run --remove-orphans \
+    --rm \
     --name certcache-sync \
     -q \
     -p "53:53/tcp" \
