@@ -271,7 +271,8 @@ output_setup_link()
       --silent \
       cli \
       -- \
-      setuplink
+      setuplink \
+      -r
   )"
   cat "$INSTALL_DIR/bin/install/logo.txt" >&3
   log "================================================================================"
