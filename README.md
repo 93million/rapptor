@@ -93,7 +93,13 @@ curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bi
 
 ### Setting up WireGuard VPN
 
-VPN functionality is implemented through WireGuard. You can set up clients in Rapptor through the `WireGuard Easy VPN` app. Clients for many platforms can be found at [wireguard.com/install](https://www.wireguard.com/install/). See [docs/WireGuard.md](docs/WireGuard.md) for more info
+VPN functionality is implemented through WireGuard. You can set up clients in Rapptor through the `WireGuard Easy VPN` app. Clients for many platforms can be found at [wireguard.com/install](https://www.wireguard.com/install/).
+
+To add a new VPN client, open the ‘WireGuard Easy VPN’ app on Rapptor and find the section labelled Clients. Click on the button labeled `+ New` and enter a name, then click `Create`.
+
+Download the client config or scan the QR code to import the VPN connection to your desktop or mobile device.
+
+See [docs/WireGuard.md](docs/WireGuard.md) for more info
 
 ### Reset password
 
