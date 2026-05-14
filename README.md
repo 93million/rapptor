@@ -83,6 +83,12 @@ Rapptor is tested against several VPS providers who offer DMCA ignored services 
 
 VPN functionality is included through the app 'WireGuard Easy VPN' which is installed by default. Use the App Store to install other apps that you may wish to use
 
+#### Video: How to install RapptorVPN
+
+<div align="center"><a href="https://www.youtube.com/watch?v=BZvlDda4Mdw&list=PLAztgkA2yF6Sga17qvFcv8jOmGnicWnM3&index=1" target="_blank">
+  <img alt="Video: How to install RapptorVPN" src="docs/images//video-thumbs/Install.webp" height="391" width="220" />
+</a></div>
+
 #### Can I install without giving my server IP and root login details?
 
 Yes - as long as you are comfortable using the command line. SSH into your server and run this command:
@@ -100,6 +106,12 @@ To add a new VPN client, open the ‘WireGuard Easy VPN’ app on Rapptor and fi
 Download the client config or scan the QR code to import the VPN connection to your desktop or mobile device.
 
 See [docs/WireGuard.md](docs/WireGuard.md) for more info
+
+#### Video: Connecting to WireGuard VPN through RapptorVPN
+
+<div align="center"><a href="https://www.youtube.com/watch?v=yQSfd0Alt9o&list=PLAztgkA2yF6Sga17qvFcv8jOmGnicWnM3&index=2" target="_blank">
+  <img alt="Video: Connecting to WireGuard VPN through RapptorVPN" src="docs/images//video-thumbs/WireGuard.webp" height="391" width="220" />
+</a></div>
 
 ### Reset password
 
@@ -190,6 +202,12 @@ When connecting to Jellyfin server from a smart TV, tablet, enter the address as
 Enter the username and password you created when you first launched Jellyfin
 
 For information about using Jellyfin on your TV see [docs/Jellyfin.md](docs/Jellyfin.md)
+
+#### Video: Using Transmission and Jellyfin with RapptorVPN
+
+<div align="center"><a href="https://www.youtube.com/watch?v=goV53jb0S4A&list=PLAztgkA2yF6Sga17qvFcv8jOmGnicWnM3&index=3" target="_blank">
+  <img alt="Video: Using Transmission and Jellyfin with RapptorVPN" src="docs/images//video-thumbs/Transmission_Jellyfin.webp" height="391" width="220" />
+</a></div>
 
 ### Running NextCloud and OwnCloud for the first time
 

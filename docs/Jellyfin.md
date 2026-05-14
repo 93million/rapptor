@@ -19,3 +19,10 @@ Enter the username and password you created when you first launched Jellyfin
 ## Resetting the username and password
 
 If you have forgotten your username and password you can reset Jellyfin by uninstalling and reinstalling it. This will not delete any media you have but your accounts and settings we be removed and you will be asked again to create a new account when you open Jellyfin for the first time.
+
+
+## Video: Using Transmission and Jellyfin with RapptorVPN
+
+<div align="center"><a href="https://www.youtube.com/watch?v=goV53jb0S4A&list=PLAztgkA2yF6Sga17qvFcv8jOmGnicWnM3&index=3" target="_blank">
+  <img alt="Video: Using Transmission and Jellyfin with RapptorVPN" src="../docs/images//video-thumbs/Transmission_Jellyfin.webp" height="391" width="220" />
+</a></div>

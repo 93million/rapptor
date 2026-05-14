@@ -39,3 +39,9 @@ Steps:
 - Choose the configuration file you downloaded.
 
 Now you can connect by activating the toggle in the WireGuard app.
+
+### Video: Connecting to WireGuard VPN through RapptorVPN
+
+<div align="center"><a href="https://www.youtube.com/watch?v=yQSfd0Alt9o&list=PLAztgkA2yF6Sga17qvFcv8jOmGnicWnM3&index=2" target="_blank">
+  <img alt="Video: Connecting to WireGuard VPN through RapptorVPN" src="../docs/images//video-thumbs/WireGuard.webp" height="391" width="220" />
+</a></div>
