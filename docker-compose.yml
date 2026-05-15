@@ -10,12 +10,12 @@ volumes:
 
 services:
   rapptoros:
-    container_name: service.93million.rapptor
-    image: ${RAPPTOR_CUSTOM_IMAGE_URI:-ghcr.io/93million/rapptor:0.3.0}
+    container_name: service.rapptor.os
+    image: ${RAPPTOR_CUSTOM_IMAGE_URI:-ghcr.io/rapptorvpn/rapptor:0.3.0}
     restart: always
     environment:
       NODE_ENV: production
-      RAPPTOR_APP_STORE_REPO: ${RAPPTOR_CUSTOM_APP_STORE_REPO:-https://github.com/93million/rapptor-app-store/}
+      RAPPTOR_APP_STORE_REPO: ${RAPPTOR_CUSTOM_APP_STORE_REPO:-https://github.com/rapptorvpn/app-store/}
     env_file:
       - .env
     ports:
@@ -38,7 +38,7 @@ services:
       - rapptor-tls-certs:/etc/certcache:ro
       - rapptor-user-data:/files:rw
     labels:
-      com.93million.containerType: system
+      com.rapptor.containerType: system
   certcache:
     container_name: certcache
     image: ghcr.io/93million/certcache:1.0.0
@@ -54,11 +54,11 @@ services:
       - '53:53/udp'
       - '53:53/tcp'
     labels:
-      com.93million.containerType: system
+      com.rapptor.containerType: system
   docker-container:
     image: docker:26.1.0-dind-alpine3.19
     container_name: dockerrun
     restart: 'no'
     labels:
-      com.93million.containerType: system
+      com.rapptor.containerType: system
     command: ['true']

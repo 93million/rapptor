@@ -37,7 +37,7 @@ Rapptor runs on hosting that you purchase separately. We are not responsible for
 
 ### 3.2 Rapptor Support
 If you encounter a problem with Rapptor itself, please open an issue on our GitHub page:
-[https://github.com/93million/rapptor/issues](https://github.com/93million/rapptor/issues)
+[https://github.com/rapptorvpn/rapptor/issues](https://github.com/rapptorvpn/rapptor/issues)
 
 ### 3.3 Legal Compliance
 The transmission, storage, or presentation of any information, data, or material that violates the laws of the **United Kingdom** or the laws of the jurisdiction in which your hosting service is located is strictly prohibited.

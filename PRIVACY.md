@@ -38,7 +38,7 @@ Since Rapptor runs on a hosting provider you choose, your hosting provider may h
 ---
 
 ## 6. Support Requests
-If you require technical support for Rapptor, we may ask you to share relevant non-sensitive information voluntarily (e.g., screenshots of errors). Any information you share with us through [https://github.com/93million/rapptor/issues](https://github.com/93million/rapptor/issues) will be publicly visible on GitHub unless you submit it via a private channel.
+If you require technical support for Rapptor, we may ask you to share relevant non-sensitive information voluntarily (e.g., screenshots of errors). Any information you share with us through [https://github.com/rapptorvpn/rapptor/issues](https://github.com/rapptorvpn/rapptor/issues) will be publicly visible on GitHub unless you submit it via a private channel.
 
 ---
 

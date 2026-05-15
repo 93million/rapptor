@@ -1,9 +1,3 @@
-<div align="right">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/93million_logo-dark.svg" height="36" />
-    <img src="docs/images/93million_logo-light.svg" alt="93 Million Ltd. logo" height="36" />
-  </picture>
-</div><br />
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/rapptor-logo-3-dark.svg" height="220" />
@@ -67,7 +61,7 @@ Rapptor is tested against several VPS providers who offer DMCA ignored services 
   - Enter the following command:
 
   ```sh
-  cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking off^" root@!IP! curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh ^| bash"
+  cmd /V:ON /C "set /p IP=Enter server IP: & ssh -o ^"StrictHostKeyChecking off^" root@!IP! curl -s https://raw.githubusercontent.com/rapptorvpn/rapptor/refs/heads/master/bin/install/install.sh ^| bash"
   ```
 
   Mac/Linux Terminal:
@@ -76,7 +70,7 @@ Rapptor is tested against several VPS providers who offer DMCA ignored services 
   - Enter the following command:
 
   ```sh
-  echo -n "Enter server IP: " && read IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash"
+  echo -n "Enter server IP: " && read IP && ssh -o "StrictHostKeyChecking off" root@$IP "curl -s https://raw.githubusercontent.com/rapptorvpn/rapptor/refs/heads/master/bin/install/install.sh | bash"
   ```
 
 4. After the installation script has completed a URL is displayed in the Terminal. Open the URL in a browser to choose a Rapptor domain and finish setting up Rapptor (it may take 60 seconds before it is working)
@@ -94,7 +88,7 @@ VPN functionality is included through the app 'WireGuard Easy VPN' which is inst
 Yes - as long as you are comfortable using the command line. SSH into your server and run this command:
 
 ```sh
-curl -s https://raw.githubusercontent.com/93million/rapptor/refs/heads/master/bin/install/install.sh | bash
+curl -s https://raw.githubusercontent.com/rapptorvpn/rapptor/refs/heads/master/bin/install/install.sh | bash
 ```
 
 ### Setting up WireGuard VPN
@@ -218,12 +212,4 @@ Before you can log in you will need to set an admin password.
 - Enter an admin password and click submit
 - Log in with the username `admin` and the password you just entered
 
-*Copyright 93 Million. All rights reserved*
-
-<br />
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/93million_logo-dark.svg" height="48" />
-    <img src="docs/images/93million_logo-light.svg" alt="93 Million Ltd. logo" height="48" />
-  </picture>
-</p>
+*Copyright RapptorVPN. All rights reserved*

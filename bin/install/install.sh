@@ -2,7 +2,7 @@
 
 set -E
 
-APP_REPO_DEFAULT="github.com/93million/rapptor"
+APP_REPO_DEFAULT="github.com/rapptorvpn/rapptor"
 CERTCACHE_CERTBOT_EMAIL="certbot@93m.org"
 GIT_BRANCH_DEFAULT="master"
 
@@ -129,7 +129,7 @@ error()
   logError
   logError
   logError "Rapptor failed to install"
-  logError "Please file an issue at https://github.com/93million/rapptor/issues and include the output from this script"
+  logError "Please file an issue at https://github.com/rapptorvpn/rapptor/issues and include the output from this script"
   logError
 
   remove_logs
@@ -218,7 +218,7 @@ install_apps() {
     rapptoros \
     npm --no-update-notifier --silent run cli -- \
     install \
-    app.93million.wg-easy
+    app.rapptor.wg-easy
   logEnd
 }
 
