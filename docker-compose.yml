@@ -11,7 +11,7 @@ volumes:
 services:
   rapptoros:
     container_name: service.rapptor.os
-    image: ${RAPPTOR_CUSTOM_IMAGE_URI:-ghcr.io/rapptorvpn/rapptor:0.3.0}
+    image: ${RAPPTOR_CUSTOM_IMAGE_URI:-ghcr.io/rapptorvpn/rapptor:0.4.0}
     restart: always
     environment:
       NODE_ENV: production
