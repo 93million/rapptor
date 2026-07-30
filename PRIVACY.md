@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Last Updated:** [Insert Date]
+**Last Updated:** 2026-05-15
 
 This Privacy Policy explains how **Rapptor**, developed by **93 Million** (“we,” “our,” or “us”), handles your data. By using Rapptor, you agree to the practices described below.
 
